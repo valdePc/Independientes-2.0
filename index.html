@@ -176,7 +176,10 @@ td:hover {
 </head>
 <body>
     <div class="container">
-        <h2>Linguameeting</h2>
+        <div class="container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Logo de Linguameeting">
+            </div>
         <h2>Solicitud de Reemplazos </h2>
         <div class="form-inline">
             <div class="form-group">
@@ -314,34 +317,46 @@ td:hover {
             'Cristian Arriagada': { portal: 'cristian.arriagada1@mail.udp.cl', password: '28Julio1996!', zoom: 'cristian.arriagada1@mail.udp.cl', zoomPassword: '28Julio1996!', emergencyRoom: 'https://linguameeting.zoom.us/j/99032698699?pwd=TdJeJBJNu20PznWPRj8Fo5amyaTxYB.1' },
             'Edwin Juarez': { portal: 'edujuarez0511@gmail.com', password: 'Danilo.0511$$', zoom: 'edujuarez0511@gmail.com', zoomPassword: 'Danilo.0511$$', emergencyRoom: 'https://linguameeting.zoom.us/j/98512648322?pwd=dms4VGd4V2FCL0ZkWSt6MUUwZ29vdz09' },
             'Fernanda Ortiz': { portal: 'ortizcortezfernanda7@gmail.com', password: 'Fernandita2002&', zoom: 'ortizcortezfernanda7@gmail.com', zoomPassword: 'fernandita2002', emergencyRoom: 'https://linguameeting.zoom.us/j/95638745486?pwd=ayIYgKyXMarDZFBIPUGp8xO0qS7ea0.1' },
-            'Valentina Cornejo': { portal: 'moonsomnia@hotmail.com', password: 'GrahamVelasco123#', zoom: 'moonsomnia@hotmail.com', zoomPassword: 'kariyamasaki1', emergencyRoom: 'No entregada' },
+            'Valentina Cornejo': { portal: 'moonsomnia@hotmail.com', password: 'GrahamVelasco123#', zoom: 'moonsomnia@hotmail.com', zoomPassword: 'kariyamasaki1', emergencyRoom: 'https://linguameeting.zoom.us/j/98815343064?pwd=z0TU1oKoqtIVYbDs1bymsOWGRdOi4t.1' },
             'Leandro Rioja': { portal: 'lrioja02@gmail.com', password: 'Le@n2002', zoom: 'lrioja02@gmail.com', zoomPassword: 'Lean2002', emergencyRoom: 'https://linguameeting.zoom.us/j/6882524640?pwd=BPb4TN8diEMo4AcPkUcphZKMErV9yE.1' }
             
         };
 
         function populateFields() {
-            const selectedCoach = document.getElementById('coach').value;
-            if (selectedCoach && coachData[selectedCoach]) {
-                document.getElementById('portal').value = coachData[selectedCoach].portal;
-                document.getElementById('password').value = coachData[selectedCoach].password;
-                document.getElementById('zoom').value = coachData[selectedCoach].zoom;
-                document.getElementById('zoomPassword').value = coachData[selectedCoach].zoomPassword;
+    const selectedCoach = document.getElementById('coach').value;
 
-                const emergencyRoomLink = document.getElementById('emergencyRoomLink');
-                const emergencyRoomInput = document.getElementById('emergencyRoom');
-                const emergencyRoomURL = coachData[selectedCoach].emergencyRoom;
+    if (selectedCoach === "") {
+        // Limpiar los campos si se selecciona "Seleccione un coach"
+        document.getElementById('portal').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('zoom').value = '';
+        document.getElementById('zoomPassword').value = '';
+        document.getElementById('emergencyRoom').value = '';
+        document.getElementById('emergencyRoomLink').style.display = 'none'; // Ocultar el enlace de la sala de emergencia
+        document.getElementById('emergencyRoom').style.display = 'block'; // Mostrar el campo de texto de la sala de emergencia en blanco
+    } else if (coachData[selectedCoach]) {
+        // Rellenar los campos con los datos del coach seleccionado
+        document.getElementById('portal').value = coachData[selectedCoach].portal;
+        document.getElementById('password').value = coachData[selectedCoach].password;
+        document.getElementById('zoom').value = coachData[selectedCoach].zoom;
+        document.getElementById('zoomPassword').value = coachData[selectedCoach].zoomPassword;
 
-                if (emergencyRoomURL && emergencyRoomURL !== 'No entregada') {
-                    emergencyRoomLink.href = emergencyRoomURL;
-                    emergencyRoomLink.style.display = 'block';
-                    emergencyRoomInput.style.display = 'none';
-                } else {
-                    emergencyRoomInput.value = emergencyRoomURL;
-                    emergencyRoomInput.style.display = 'block';
-                    emergencyRoomLink.style.display = 'none';
-                }
-            }
+        const emergencyRoomLink = document.getElementById('emergencyRoomLink');
+        const emergencyRoomInput = document.getElementById('emergencyRoom');
+        const emergencyRoomURL = coachData[selectedCoach].emergencyRoom;
+
+        if (emergencyRoomURL && emergencyRoomURL !== 'No entregada') {
+            emergencyRoomLink.href = emergencyRoomURL;
+            emergencyRoomLink.style.display = 'block';
+            emergencyRoomInput.style.display = 'none';
+        } else {
+            emergencyRoomInput.value = emergencyRoomURL;
+            emergencyRoomInput.style.display = 'block';
+            emergencyRoomLink.style.display = 'none';
         }
+    }
+}
+
 
         function adjustTime(time, country) {
             const result = {};
@@ -361,236 +376,299 @@ td:hover {
         }
 
         function addHour() {
-            const hours = document.getElementById('hours').value;
-            const duration = document.getElementById('duracion').value;
-            const date = document.getElementById('date').value;
-            const coach = document.getElementById('coach').value;
-            const country = document.getElementById('country').value;
+    const hours = document.getElementById('hours').value;
+    const duration = document.getElementById('duracion').value;
+    const date = document.getElementById('date').value;
+    const coach = document.getElementById('coach').value;
+    const country = document.getElementById('country').value;
 
-            if (!hours || !duration || !date || !coach || !country) {
-                alert('Por favor, complete todos los campos.');
-                return;
+    if (!hours || !duration || !date || !coach || !country) {
+        alert('Por favor, complete todos los campos.');
+        return;
+    }
+
+    // Obtener la fecha actual en formato YYYY-MM-DD
+    const today = new Date().toISOString().split('T')[0];
+
+    const adjustedTimes = adjustTime(hours, country);
+    const newRow = document.createElement('tr');
+
+    newRow.innerHTML = `
+        <td>${hours}</td>
+        <td>${duration} minutos</td>
+        <td>
+            <select class="coachSelect">
+                <option value="No Remplazo">Sin Reemplazo</option>
+                <option value="Josue Avila">Josue Avila</option>
+                <option value="Magnolia Zuñiga">Magnolia Zuñiga</option>
+                <option value="Juan Rodríguez">Juan Rodríguez</option>
+                <option value="Daniela Fernandez">Daniela Fernandez</option>
+                <option value="Cristian Arriagada">Cristian Arriagada</option>
+                <option value="Edwin Juarez">Edwin Juarez</option>
+                <option value="Fernanda Ortiz">Fernanda Ortiz</option>
+                <option value="Valentina Cornejo">Valentina Cornejo</option>
+                <option value="Leandro Rioja">Leandro Rioja</option>
+                <option value="Valde Pie">Valde Pie</option>
+                <option value="Otro">Otro</option>
+            </select>
+            <input type="text" class="newCoachName" placeholder="Ingrese nuevo nombre" style="display: none;">
+        </td>
+        <td>
+            <select>
+                <option value="Interno">Interno</option>
+                <option value="Externo">Externo</option>
+            </select>
+        </td>
+        <td>${adjustedTimes['España']}</td>
+        <td>${adjustedTimes['Panamá']}</td>
+        <td>${adjustedTimes['EST']}</td>
+        <td>${adjustedTimes['República Dominicana']}</td>
+        <td>${adjustedTimes['Argentina']}</td>
+        <td>${adjustedTimes['Costa Rica']}</td>
+        <td>${adjustedTimes['Guatemala']}</td>
+        <td>${adjustedTimes['Nicaragua']}</td>
+        <td>${adjustedTimes['Chile']}</td>
+        <td>${date}</td>
+    `;
+
+    // Si la fecha es pasada, marcar la fila en rojo
+    if (date < today) {
+        newRow.style.backgroundColor = 'red';
+        alert('La fecha ingresada es pasada. La fila se ha marcado en rojo. Porfavor elimine esa fila');
+    }
+
+    // Agregar la fila a la tabla
+    document.getElementById('hoursTable').querySelector('tbody').appendChild(newRow);
+
+    const deleteHourSelect = document.getElementById('deleteHour');
+    const newOption = document.createElement('option');
+    newOption.value = hours;
+    newOption.text = hours;
+    deleteHourSelect.appendChild(newOption);
+}
+
+async function saveData() {
+    const coach = document.getElementById('coach').value;
+    const country = document.getElementById('country').value;
+    const note = document.getElementById('note').value;
+
+    const rows = document.getElementById('hoursTable').getElementsByTagName('tbody')[0].rows;
+
+    // Recorrer cada fila de la tabla para verificar duplicados en Airtable
+    for (let row of rows) {
+        const coachSolicitante = row.cells[2].getElementsByTagName('select')[0].value;
+        const fecha = row.cells[13].innerText;
+        const horaRD = row.cells[7].innerText; // Hora de República Dominicana
+
+        // Fórmula para verificar si ya existe un registro con los mismos datos en Airtable
+        const filterFormula = `AND({Coach Solicitante}="${coachSolicitante}", {Fecha}="${fecha}", {Hora Republica Dominicana}="${horaRD}")`;
+
+        try {
+            const response = await fetch(`${apiUrl}/Independientes?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Error al verificar los datos:', errorData);
+                alert('Error al verificar los datos: ' + JSON.stringify(errorData));
+                return; // Detener la función si hay un error en la verificación
             }
 
-            const adjustedTimes = adjustTime(hours, country);
-            const newRow = document.createElement('tr');
+            const data = await response.json();
 
-            newRow.innerHTML = `
-                <td>${hours}</td>
-                <td>${duration} minutos</td>
-                <td>
-                    <select class="coachSelect">
-                        <option value="No Remplazo">Sin Reemplazo</option>
-                        <option value="Josue Avila">Josue Avila</option>
-                        <option value="Magnolia Zuñiga">Magnolia Zuñiga</option>
-                        <option value="Juan Rodríguez">Juan Rodríguez</option>
-                        <option value="Daniela Fernandez">Daniela Fernandez</option>
-                        <option value="Cristian Arriagada">Cristian Arriagada</option>
-                        <option value="Edwin Juarez">Edwin Juarez</option>
-                        <option value="Fernanda Ortiz">Fernanda Ortiz</option>
-                        <option value="Valentina Cornejo">Valentina Cornejo</option>
-                        <option value="Leandro Rioja">Leandro Rioja</option>
-                        <option value="Valde Pie">Valde Pie</option>
-                        <option value="Otro">Otro</option>
-                    </select>
-                    <input type="text" class="newCoachName" placeholder="Ingrese nuevo nombre" style="display: none;">
-                </td>
-                <td>
-                    <select>
-                        <option value="Interno">Interno</option>
-                        <option value="Externo">Externo</option>
-                    </select>
-                </td>
-                <td>${adjustedTimes['España']}</td>
-                <td>${adjustedTimes['Panamá']}</td>
-                <td>${adjustedTimes['EST']}</td>
-                <td>${adjustedTimes['República Dominicana']}</td>
-                <td>${adjustedTimes['Argentina']}</td>
-                <td>${adjustedTimes['Costa Rica']}</td>
-                <td>${adjustedTimes['Guatemala']}</td>
-                <td>${adjustedTimes['Nicaragua']}</td>
-                <td>${adjustedTimes['Chile']}</td>
-                <td>${date}</td>
-            `;
+            if (data.records.length > 0) {
+                // Si ya existe un registro con la misma combinación de Coach, Fecha y Hora RD
+                alert(`Ya existe un registro con el Coach ${coachSolicitante}, la Fecha ${fecha} y la Hora de RD ${horaRD}. No se puede guardar un duplicado.`);
+                return; // Detener la función para evitar duplicados
+            }
 
-            document.getElementById('hoursTable').querySelector('tbody').appendChild(newRow);
-
-            const deleteHourSelect = document.getElementById('deleteHour');
-            const newOption = document.createElement('option');
-            newOption.value = hours;
-            newOption.text = hours;
-            deleteHourSelect.appendChild(newOption);
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al verificar los datos.');
+            return; // Detener la función si hay un error en la verificación
         }
+    }
+
+    // Si no hay duplicados, procedemos a construir los registros para guardar
+    let records = [];
+
+    for (let row of rows) {
+        records.push({
+            fields: {
+                "Coach Solicitante": row.cells[2].getElementsByTagName('select')[0].value,
+                "País": country,
+                "Duración": row.cells[1].innerText,
+                "Coach de Reemplazo": row.cells[2].getElementsByTagName('select')[0].value,
+                "Tipo de Reemplazo": row.cells[3].getElementsByTagName('select')[0].value,
+                "Hora España": row.cells[4].innerText,
+                "Hora Panamá": row.cells[5].innerText,
+                "Hora EST": row.cells[6].innerText,
+                "Hora Republica Dominicana": row.cells[7].innerText,
+                "Hora Argentina": row.cells[8].innerText,
+                "Hora Costa Rica": row.cells[9].innerText,
+                "Hora Guatemala": row.cells[10].innerText,
+                "Hora Nicaragua": row.cells[11].innerText,
+                "Hora Chile": row.cells[12].innerText,
+                "Fecha": row.cells[13].innerText,
+                "Nota": note
+            }
+        });
+    }
+
+    console.log(JSON.stringify({ records }));
+
+    try {
+        const response = await fetch(`${apiUrl}/Independientes`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ records })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Error al guardar los datos:', errorData);
+            alert('Error al guardar los datos: ' + JSON.stringify(errorData));
+        } else {
+            const data = await response.json();
+            console.log('Datos guardados con éxito:', data);
+            alert('Datos guardados con éxito.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al guardar los datos.');
+    }
+}
+
 
         const apiUrl = 'https://api.airtable.com/v0/appVuMTXFU8YHrGND';
         const apiKey = 'pat9wBOS3cEULZjbM.46a19c678b7b3a403febb212e0ec73de16f408d4193bf476a5d7348c23be39b1';
 
-        async function saveData() {
-            const coach = document.getElementById('coach').value;
-            const country = document.getElementById('country').value;
-            const note = document.getElementById('note').value;
 
-            const rows = document.getElementById('hoursTable').getElementsByTagName('tbody')[0].rows;
 
-            let records = Array.from(rows).map(row => {
-                return {
-                    fields: {
-                        "Coach Solicitante": coach,
-                        "País": country,
-                        "Duración": row.cells[1].innerText,
-                        "Coach de Reemplazo": row.cells[2].getElementsByTagName('select')[0].value,
-                        "Tipo de Reemplazo": row.cells[3].getElementsByTagName('select')[0].value,
-                        "Hora España": row.cells[4].innerText,
-                        "Hora Panamá": row.cells[5].innerText,
-                        "Hora EST": row.cells[6].innerText,
-                        "Hora Republica Dominicana": row.cells[7].innerText,
-                        "Hora Argentina": row.cells[8].innerText,
-                        "Hora Costa Rica": row.cells[9].innerText,
-                        "Hora Guatemala": row.cells[10].innerText,
-                        "Hora Nicaragua": row.cells[11].innerText,
-                        "Hora Chile": row.cells[12].innerText,
-                        "Fecha": row.cells[13].innerText,
-                        "Nota": note
-                    }
-                };
-            });
-
-            console.log(JSON.stringify({ records }));
-
-            try {
-                const response = await fetch(`${apiUrl}/Independientes`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${apiKey}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ records })
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('Error al guardar los datos:', errorData);
-                    alert('Error al guardar los datos: ' + JSON.stringify(errorData));
-                } else {
-                    const data = await response.json();
-                    console.log('Datos guardados con éxito:', data);
-                    alert('Datos guardados con éxito.');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error al guardar los datos.');
-            }
-        }
-
+        
         async function searchRecords() {
-            const coach = document.getElementById('coach').value;
+    const coach = document.getElementById('coach').value;
 
-            if (!coach) {
-                alert('Por favor, selecciona un Coach.');
-                return;
+    if (!coach) {
+        alert('Por favor, selecciona un Coach.');
+        return;
+    }
+
+    // Obtener la fecha actual en formato YYYY-MM-DD
+    const today = new Date().toISOString().split('T')[0];
+
+    // Fórmula para filtrar por Coach Solicitante y fechas a partir de hoy
+    const filterFormula = `AND({Coach Solicitante}="${coach}", IS_AFTER({Fecha}, "${today}"))`;
+
+    try {
+        const response = await fetch(`${apiUrl}/Independientes?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+            method: 'GET',
+            headers: {
+                
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json'
             }
+            
+        });
 
-            const filterFormula = `{Coach Solicitante}="${coach}"`;
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Error al buscar los datos:', errorData);
+            alert('Error al buscar los datos: ' + JSON.stringify(errorData));
+        } else {
+            const data = await response.json();
+            console.log('Datos recibidos:', data); 
 
-            try {
-                const response = await fetch(`${apiUrl}/Independientes?filterByFormula=${encodeURIComponent(filterFormula)}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${apiKey}`,
-                        'Content-Type': 'application/json'
-                    }
+            const tableBody = document.getElementById('hoursTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
+
+            if (data.records.length === 0) {
+                alert('No se encontraron registros.');
+            } else {
+                data.records.forEach(record => {
+                    const row = tableBody.insertRow();
+                    row.setAttribute('data-record-id', record.id);
+
+                    row.insertCell(0).innerText = record.fields["Hora"] || '';
+                    row.insertCell(1).innerText = record.fields["Duración"] || '';
+
+                    const coachCell = row.insertCell(2);
+                    const coachSelect = document.createElement('select');
+                    coachSelect.classList.add('coachSelect');
+                    const coaches = [
+                        "No Remplazo", "Josue Avila", "Magnolia Zuñiga", "Juan Rodríguez", "Daniela Fernandez",
+                        "Cristian Arriagada", "Edwin Juarez", "Fernanda Ortiz", "Valentina Cornejo", "Valde Pie", "Otro"
+                    ];
+                    coaches.forEach(coachName => {
+                        const option = document.createElement('option');
+                        option.value = coachName;
+                        option.text = coachName;
+                        coachSelect.appendChild(option);
+                    });
+                    coachSelect.value = record.fields["Coach de Reemplazo"] || "No Remplazo";
+                    coachCell.appendChild(coachSelect);
+
+                    const newCoachInput = document.createElement('input');
+                    newCoachInput.type = 'text';
+                    newCoachInput.classList.add('newCoachName');
+                    newCoachInput.placeholder = "Ingrese nuevo nombre";
+                    newCoachInput.style.display = 'none';
+                    coachCell.appendChild(newCoachInput);
+
+                    coachSelect.addEventListener('change', function() {
+                        if (coachSelect.value === 'Otro') {
+                            newCoachInput.style.display = 'block';
+                        } else {
+                            newCoachInput.style.display = 'none';
+                        }
+                    });
+
+                    const tipoReemplazoCell = row.insertCell(3);
+                    const tipoReemplazoSelect = document.createElement('select');
+                    ["Interno", "Externo"].forEach(tipo => {
+                        const option = document.createElement('option');
+                        option.value = tipo;
+                        option.text = tipo;
+                        tipoReemplazoSelect.appendChild(option);
+                    });
+                    tipoReemplazoSelect.value = record.fields["Tipo de Reemplazo"] || "Interno";
+                    tipoReemplazoCell.appendChild(tipoReemplazoSelect);
+
+                    row.insertCell(4).innerText = record.fields["Hora España"] || '';
+                    row.insertCell(5).innerText = record.fields["Hora Panamá"] || '';
+                    row.insertCell(6).innerText = record.fields["Hora EST"] || '';
+                    row.insertCell(7).innerText = record.fields["Hora Republica Dominicana"] || '';
+                    row.insertCell(8).innerText = record.fields["Hora Argentina"] || '';
+                    row.insertCell(9).innerText = record.fields["Hora Costa Rica"] || '';
+                    row.insertCell(10).innerText = record.fields["Hora Guatemala"] || '';
+                    row.insertCell(11).innerText = record.fields["Hora Nicaragua"] || '';
+                    row.insertCell(12).innerText = record.fields["Hora Chile"] || '';
+                    row.insertCell(13).innerText = record.fields["Fecha"] || '';
                 });
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('Error al buscar los datos:', errorData);
-                    alert('Error al buscar los datos: ' + JSON.stringify(errorData));
+                if (data.records.length > 0) {
+                    document.getElementById('note').value = data.records[data.records.length - 1].fields["Nota"] || '';
                 } else {
-                    const data = await response.json();
-                    console.log('Datos recibidos:', data);
-
-                    const tableBody = document.getElementById('hoursTable').getElementsByTagName('tbody')[0];
-                    tableBody.innerHTML = '';
-
-                    if (data.records.length === 0) {
-                        alert('No se encontraron registros.');
-                    } else {
-                        data.records.forEach(record => {
-                            const row = tableBody.insertRow();
-                            row.setAttribute('data-record-id', record.id);
-
-                            row.insertCell(0).innerText = record.fields["Hora"] || '';
-                            row.insertCell(1).innerText = record.fields["Duración"] || '';
-
-                            const coachCell = row.insertCell(2);
-                            const coachSelect = document.createElement('select');
-                            coachSelect.classList.add('coachSelect');
-                            const coaches = [
-                                "No Remplazo", "Josue Avila", "Magnolia Zuñiga", "Juan Rodríguez", "Daniela Fernandez",
-                                "Cristian Arriagada", "Edwin Juarez", "Fernanda Ortiz", "Valentina Cornejo", "Valde Pie", "Otro"
-                            ];
-                            coaches.forEach(coachName => {
-                                const option = document.createElement('option');
-                                option.value = coachName;
-                                option.text = coachName;
-                                coachSelect.appendChild(option);
-                            });
-                            coachSelect.value = record.fields["Coach de Reemplazo"] || "No Remplazo";
-                            coachCell.appendChild(coachSelect);
-
-                            const newCoachInput = document.createElement('input');
-                            newCoachInput.type = 'text';
-                            newCoachInput.classList.add('newCoachName');
-                            newCoachInput.placeholder = "Ingrese nuevo nombre";
-                            newCoachInput.style.display = 'none';
-                            coachCell.appendChild(newCoachInput);
-
-                            coachSelect.addEventListener('change', function() {
-                                if (coachSelect.value === 'Otro') {
-                                    newCoachInput.style.display = 'block';
-                                } else {
-                                    newCoachInput.style.display = 'none';
-                                }
-                            });
-
-                            const tipoReemplazoCell = row.insertCell(3);
-                            const tipoReemplazoSelect = document.createElement('select');
-                            ["Interno", "Externo"].forEach(tipo => {
-                                const option = document.createElement('option');
-                                option.value = tipo;
-                                option.text = tipo;
-                                tipoReemplazoSelect.appendChild(option);
-                            });
-                            tipoReemplazoSelect.value = record.fields["Tipo de Reemplazo"] || "Interno";
-                            tipoReemplazoCell.appendChild(tipoReemplazoSelect);
-
-                            row.insertCell(4).innerText = record.fields["Hora España"] || '';
-                            row.insertCell(5).innerText = record.fields["Hora Panamá"] || '';
-                            row.insertCell(6).innerText = record.fields["Hora EST"] || '';
-                            row.insertCell(7).innerText = record.fields["Hora Republica Dominicana"] || '';
-                            row.insertCell(8).innerText = record.fields["Hora Argentina"] || '';
-                            row.insertCell(9).innerText = record.fields["Hora Costa Rica"] || '';
-                            row.insertCell(10).innerText = record.fields["Hora Guatemala"] || '';
-                            row.insertCell(11).innerText = record.fields["Hora Nicaragua"] || '';
-                            row.insertCell(12).innerText = record.fields["Hora Chile"] || '';
-                            row.insertCell(13).innerText = record.fields["Fecha"] || '';
-                        });
-
-                        if (data.records.length > 0) {
-                            document.getElementById('note').value = data.records[data.records.length - 1].fields["Nota"] || '';
-                        } else {
-                            document.getElementById('note').value = '';
-                        }
-
-                        alert('Búsqueda completada con éxito.');
-                    }
+                    document.getElementById('note').value = '';
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error al buscar los datos.');
+
+                alert('Búsqueda completada con éxito.');
             }
         }
-      
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al buscar los datos.');
+    }
+}
+
         async function replaceData() {
     const rows = document.getElementById('hoursTable').getElementsByTagName('tbody')[0].rows;
     let records = [];
