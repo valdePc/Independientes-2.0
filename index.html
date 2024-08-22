@@ -9,49 +9,80 @@
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background: #f4f4f4;
+            background: linear-gradient(to right, #00c6ff, #00a9b5);
             color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            transition: background 0.5s ease;
         }
         .container {
             background: white;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             text-align: center;
             max-width: 400px;
             width: 100%;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         h1 {
             color: #00a9b5;
             margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
         }
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            position: relative;
         }
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: bold;
+            font-size: 14px;
+            text-align: left;
         }
         .form-group select, .form-group input {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 8px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            transition: border 0.3s ease;
+            box-sizing: border-box;
+        }
+        .form-group select:focus, .form-group input:focus {
+            border: 1px solid #00a9b5;
+            box-shadow: 0 0 8px rgba(0, 114, 255, 0.3);
+            outline: none;
+        }
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
+            color: #00a9b5;
         }
         .form-group button {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background: #00a9b5;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 20px;
+            font-size: 16px;
+            transition: background 0.3s ease;
         }
         .form-group button:hover {
             background: #007BFF;
@@ -64,15 +95,16 @@
         <div class="form-group">
             <label for="group">Selecciona tu grupo:</label>
             <select id="group">
+                <option value="Selecciona tu grupo">Selecciona tu grupo</option>
                 <option value="Independientes 1.0">Independientes 1.0</option>
                 <option value="Independientes 2.0">Independientes 2.0</option>
-                <option value="OtroGrupo">Otro Grupo</option>
                 <!-- Puedes agregar más opciones de grupos aquí -->
             </select>
         </div>
         <div class="form-group">
             <label for="password">Contraseña:</label>
             <input type="password" id="password" placeholder="Ingresa la contraseña">
+            <span class="toggle-password" onclick="togglePassword()">👁️</span>
         </div>
         <div class="form-group">
             <button onclick="accessGroup()">Acceder</button>
@@ -80,17 +112,31 @@
     </div>
 
     <script>
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.querySelector('.toggle-password');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.textContent = '🙈'; // Cambia el icono al hacer clic
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.textContent = '👁️'; // Cambia el icono al hacer clic
+            }
+        }
+
         function accessGroup() {
             const group = document.getElementById('group').value;
             const password = document.getElementById('password').value;
 
-            // Aquí se verifica la contraseña y se redirige a la página correspondiente
-            if (group === 'Independientes Ind2.0' && password === 'Ind2.0') {
-    window.location.href = 'remplazos.html'; // Ruta relativa en el servidor
-} else {
-    alert('Contraseña incorrecta. Por favor, intenta nuevamente.');
-}
+            // Verificación de la contraseña para cada grupo
+            if (group === 'Independientes 1.0' && password === 'Inde1.0') {
+                window.location.href = 'Ginde1.html'; // Redirige a Gind1.html
+            } else if (group === 'Independientes 2.0' && password === 'Ind2.0') {
+                window.location.href = 'Ginde2.html'; // Redirige a Ginde2.html
+            } else {
+                alert('Contraseña incorrecta. Por favor, intenta nuevamente.');
+            }
         }
     </script>
 </body>
-</html>
+</html
