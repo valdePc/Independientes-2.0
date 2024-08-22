@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Acceso - Independientes</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            color: #00a9b5;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background: #00a9b5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .form-group button:hover {
+            background: #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Portal de Acceso</h1>
+        <div class="form-group">
+            <label for="group">Selecciona tu grupo:</label>
+            <select id="group">
+                <option value="Independientes 1.0">Independientes 1.0</option>
+                <option value="Independientes 2.0">Independientes 2.0</option>
+                <option value="OtroGrupo">Otro Grupo</option>
+                <!-- Puedes agregar más opciones de grupos aquí -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" placeholder="Ingresa la contraseña">
+        </div>
+        <div class="form-group">
+            <button onclick="accessGroup()">Acceder</button>
+        </div>
+    </div>
+
+    <script>
+        function accessGroup() {
+            const group = document.getElementById('group').value;
+            const password = document.getElementById('password').value;
+
+            // Aquí se verifica la contraseña y se redirige a la página correspondiente
+            if (group === 'Independientes 2.0' && password === '2.0inde') {
+    window.location.href = 'index.html'; // Ruta relativa en el servidor
+} else {
+    alert('Contraseña incorrecta. Por favor, intenta nuevamente.');
+}
+        }
+    </script>
+</body>
+</html>
