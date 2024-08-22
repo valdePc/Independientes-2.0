@@ -349,20 +349,14 @@ td:hover {
             
         };
 
-        function populateFields() {
+       function populateFields() {
     const selectedCoach = document.getElementById('coach').value;
 
     if (selectedCoach === "") {
-        // Limpiar los campos si se selecciona "Seleccione un coach"
-        document.getElementById('portal').value = '';
-        document.getElementById('password').value = '';
-        document.getElementById('zoom').value = '';
-        document.getElementById('zoomPassword').value = '';
-        document.getElementById('emergencyRoom').value = '';
-        document.getElementById('emergencyRoomLink').style.display = 'none'; // Ocultar el enlace de la sala de emergencia
-        document.getElementById('emergencyRoom').style.display = 'block'; // Mostrar el campo de texto de la sala de emergencia en blanco
+        // Si no se selecciona un coach, limpiar todos los campos
+        clearFields();
     } else if (coachData[selectedCoach]) {
-        // Rellenar los campos con los datos del coach seleccionado
+        // Si se selecciona un coach, llenar los campos correspondientes
         document.getElementById('portal').value = coachData[selectedCoach].portal;
         document.getElementById('password').value = coachData[selectedCoach].password;
         document.getElementById('zoom').value = coachData[selectedCoach].zoom;
@@ -381,10 +375,121 @@ td:hover {
             emergencyRoomInput.style.display = 'block';
             emergencyRoomLink.style.display = 'none';
         }
+    } else {
+        // Si el coach seleccionado no está en coachData, limpiar los campos también
+        clearFields();
     }
 }
 
+function clearFields() {
+    // Limpiar campos básicos
+    document.getElementById('portal').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('zoom').value = '';
+    document.getElementById('zoomPassword').value = '';
+    document.getElementById('emergencyRoom').value = '';
+    document.getElementById('emergencyRoomLink').href = '#';
+    document.getElementById('emergencyRoomLink').style.display = 'none';
+    document.getElementById('emergencyRoom').style.display = 'block';
 
+    // Limpiar campos adicionales
+    document.getElementById('date').value = '';
+    document.getElementById('coach').value = '';
+    document.getElementById('country').value = '';
+    document.getElementById('hours').value = '';
+    document.getElementById('duracion').value = '';
+    document.getElementById('note').value = '';
+
+    // Limpiar las filas de la tabla
+    const tableBody = document.getElementById('hoursTable').querySelector('tbody');
+    while (tableBody.firstChild) {
+        tableBody.removeChild(tableBody.firstChild);
+    }
+
+    // Limpiar opciones de eliminación de horas
+    const deleteHourSelect = document.getElementById('deleteHour');
+    deleteHourSelect.innerHTML = '';
+}
+function populateFields() {
+    const selectedCoach = document.getElementById('coach').value;
+
+    if (selectedCoach === "Seleccione un coach") {
+        // Si se selecciona "Seleccione un coach", limpiar todos los campos
+        clearFields();
+    } else if (coachData[selectedCoach]) {
+        // Si se selecciona un coach válido, llenar los campos correspondientes
+        document.getElementById('portal').value = coachData[selectedCoach].portal;
+        document.getElementById('password').value = coachData[selectedCoach].password;
+        document.getElementById('zoom').value = coachData[selectedCoach].zoom;
+        document.getElementById('zoomPassword').value = coachData[selectedCoach].zoomPassword;
+
+        const emergencyRoomLink = document.getElementById('emergencyRoomLink');
+        const emergencyRoomInput = document.getElementById('emergencyRoom');
+        const emergencyRoomURL = coachData[selectedCoach].emergencyRoom;
+
+        if (emergencyRoomURL && emergencyRoomURL !== 'No entregada') {
+            emergencyRoomLink.href = emergencyRoomURL;
+            emergencyRoomLink.style.display = 'block';
+            emergencyRoomInput.style.display = 'none';
+        } else {
+            emergencyRoomInput.value = emergencyRoomURL;
+            emergencyRoomInput.style.display = 'block';
+            emergencyRoomLink.style.display = 'none';
+        }
+    } else {
+        // Si el coach seleccionado no está en coachData, limpiar los campos también
+        clearFields();
+    }
+}
+
+function clearFields() {
+    // Limpiar campos básicos
+    document.getElementById('portal').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('zoom').value = '';
+    document.getElementById('zoomPassword').value = '';
+    document.getElementById('emergencyRoom').value = '';
+    document.getElementById('emergencyRoomLink').href = '#';
+    document.getElementById('emergencyRoomLink').style.display = 'none';
+    document.getElementById('emergencyRoom').style.display = 'block';
+
+    // Limpiar campos adicionales
+    document.getElementById('date').value = '';
+    document.getElementById('coach').value = '';
+    document.getElementById('country').value = '';
+    document.getElementById('hours').value = '';
+    document.getElementById('duracion').value = '';
+    document.getElementById('note').value = '';
+
+    // Limpiar las filas de la tabla
+    const tableBody = document.getElementById('hoursTable').querySelector('tbody');
+    while (tableBody.firstChild) {
+        tableBody.removeChild(tableBody.firstChild);
+    }
+
+    // Limpiar opciones de eliminación de horas
+    const deleteHourSelect = document.getElementById('deleteHour');
+    deleteHourSelect.innerHTML = '';
+}
+
+
+
+function clearHours() {
+    const tableBody = document.getElementById('hoursTable').querySelector('tbody');
+    while (tableBody.firstChild) {
+        tableBody.removeChild(tableBody.firstChild);
+    }
+    document.getElementById('date').value = '';
+    document.getElementById('coach').value = '';
+    document.getElementById('country').value = '';
+    document.getElementById('hours').value = '';
+    document.getElementById('duracion').value = '';
+    document.getElementById('note').value = '';
+
+    // Limpiar opciones de eliminación de horas
+    const deleteHourSelect = document.getElementById('deleteHour');
+    deleteHourSelect.innerHTML = '';
+}
 
         function adjustTime(time, country) {
             const result = {};
