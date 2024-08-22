@@ -480,13 +480,13 @@ async function saveData() {
 
     const rows = document.getElementById('hoursTable').getElementsByTagName('tbody')[0].rows;
 
-    // Recorrer cada fila de la tabla para verificar duplicados en Airtable
+    // Recorremos las filas de la tabla para verificar duplicados en Airtable
     for (let row of rows) {
-        const coachSolicitante = row.cells[2].getElementsByTagName('select')[0].value;
+        const coachSolicitante = coach; // Aquí debes tomar el valor seleccionado para Coach Solicitante, no el de Reemplazo
         const fecha = row.cells[13].innerText;
         const horaRD = row.cells[7].innerText; // Hora de República Dominicana
 
-        // Fórmula para verificar si ya existe un registro con los mismos datos en Airtable
+        // Verificar si ya existe un registro con los mismos datos en Airtable
         const filterFormula = `AND({Coach Solicitante}="${coachSolicitante}", {Fecha}="${fecha}", {Hora Republica Dominicana}="${horaRD}")`;
 
         try {
@@ -526,7 +526,7 @@ async function saveData() {
     for (let row of rows) {
         records.push({
             fields: {
-                "Coach Solicitante": row.cells[2].getElementsByTagName('select')[0].value,
+                "Coach Solicitante": coach, // Aquí debe ir el valor correcto de Coach Solicitante
                 "País": country,
                 "Duración": row.cells[1].innerText,
                 "Coach de Reemplazo": row.cells[2].getElementsByTagName('select')[0].value,
@@ -572,6 +572,7 @@ async function saveData() {
         alert('Error al guardar los datos.');
     }
 }
+
 
 
         const apiUrl = 'https://api.airtable.com/v0/appVuMTXFU8YHrGND';
