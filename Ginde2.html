@@ -340,7 +340,6 @@
             <button onclick="saveData()">Guardar</button>
             <button onclick="searchRecords()">Buscar</button>
             <button onclick="replaceData()">Reemplazar</button>
-            <button onclick="window.location.href='index.html';">Salir</button>
 
         </div>
     </div>
@@ -504,7 +503,7 @@ async function addHour() {
     const filterFormula = `AND({Coach Solicitante}="${coach}", {Fecha}="${date}", {Hora Republica Dominicana}="${hours}")`;
 
     try {
-        const response = await fetch(`${apiUrl}/Independientes?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+        const response = await fetch(`${apiUrl}/Independientes 2.0?filterByFormula=${encodeURIComponent(filterFormula)}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${apiKey}`,
@@ -601,7 +600,7 @@ async function saveData() {
         const filterFormula = `AND({Coach Solicitante}="${coachSolicitante}", {Fecha}="${fecha}", {Hora Republica Dominicana}="${horaRD}")`;
 
         try {
-            const response = await fetch(`${apiUrl}/Independientes?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+            const response = await fetch(`${apiUrl}/Independientes 2.0?filterByFormula=${encodeURIComponent(filterFormula)}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${apiKey}`,
@@ -660,7 +659,7 @@ async function saveData() {
     console.log(JSON.stringify({ records }));
 
     try {
-        const response = await fetch(`${apiUrl}/Independientes`, {
+        const response = await fetch(`${apiUrl}/Independientes 2.0`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${apiKey}`,
@@ -730,7 +729,7 @@ function clearForm() {
     const filterFormula = `AND({Coach Solicitante}="${coach}", IS_AFTER({Fecha}, "${today}"))`;
 
     try {
-        const response = await fetch(`${apiUrl}/Independientes?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+        const response = await fetch(`${apiUrl}/Independientes 2.0?filterByFormula=${encodeURIComponent(filterFormula)}`, {
             method: 'GET',
             headers: {
                 
@@ -841,7 +840,7 @@ function clearForm() {
 
         try {
             // Obtener la fila original de la base de datos
-            const response = await fetch(`${apiUrl}/Independientes/${recordId}`, {
+            const response = await fetch(`${apiUrl}/Independientes 2.0/${recordId}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${apiKey}`,
@@ -860,7 +859,7 @@ function clearForm() {
 
             if (originalCoachReemplazo !== "No Remplazo" && coachReemplazo !== "No Remplazo") {
                 const password = prompt(`Por favor, ingresa la contraseña o comuniquese con su C.A.                  (Josue Avila)`);
-                if (password !== "LMR2.0") {
+                if (password !== ".8w") {
                     alert(`Contraseña incorrecta, No se le asignara el coach seleccionado`);
                     continue;
                 }
@@ -889,7 +888,7 @@ function clearForm() {
         const batch = records.slice(i, i + 10);
 
         try {
-            const response = await fetch(`${apiUrl}/Independientes`, {
+            const response = await fetch(`${apiUrl}/Independientes 2.0`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${apiKey}`,

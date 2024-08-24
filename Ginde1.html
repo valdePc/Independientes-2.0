@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LM:INDEPENDIENTES0.2</title>
+    <title>LM:INDEPENDIENTES 1.0</title>
     <style>
         .logo {
             margin: 0;
@@ -489,7 +489,7 @@ async function addHour() {
     const filterFormula = `AND({Coach Solicitante}="${coach}", {Fecha}="${date}", {Hora Republica Dominicana}="${hours}")`;
 
     try {
-        const response = await fetch(`${apiUrl}/Independientes?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+        const response = await fetch(`${apiUrl}/Independientes 1.0?filterByFormula=${encodeURIComponent(filterFormula)}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${apiKey}`,
@@ -598,7 +598,7 @@ async function saveData() {
         const filterFormula = `AND({Coach Solicitante}="${coachSolicitante}", {Fecha}="${fecha}", {Hora Republica Dominicana}="${horaRD}")`;
 
         try {
-            const response = await fetch(`${apiUrl}/Independientes?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+            const response = await fetch(`${apiUrl}/Independientes 1.0?filterByFormula=${encodeURIComponent(filterFormula)}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${apiKey}`,
@@ -657,7 +657,7 @@ async function saveData() {
     console.log(JSON.stringify({ records }));
 
     try {
-        const response = await fetch(`${apiUrl}/Independientes`, {
+        const response = await fetch(`${apiUrl}/Independientes 1.0`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${apiKey}`,
@@ -706,8 +706,8 @@ function clearForm() {
 
 
 
-        const apiUrl = 'https://api.airtable.com/v0/appVuMTXFU8YHrGND';
-        const apiKey = 'pat9wBOS3cEULZjbM.46a19c678b7b3a403febb212e0ec73de16f408d4193bf476a5d7348c23be39b1';
+        const apiUrl = 'https://api.airtable.com/v0/appx4eD3f7NINswZW';
+        const apiKey = 'patsEfxSCLWnTojGq.2f2358fbbfcbe9c18188eb01cfc52830bea349c615046e58fe80443b5a4109cb';
 
 
 
@@ -727,7 +727,7 @@ function clearForm() {
     const filterFormula = `AND({Coach Solicitante}="${coach}", IS_AFTER({Fecha}, "${today}"))`;
 
     try {
-        const response = await fetch(`${apiUrl}/Independientes?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+        const response = await fetch(`${apiUrl}/Independientes 1.0?filterByFormula=${encodeURIComponent(filterFormula)}`, {
             method: 'GET',
             headers: {
                 
@@ -850,7 +850,7 @@ async function replaceData() {
 
         try {
             // Obtener la fila original de la base de datos
-            const response = await fetch(`${apiUrl}/Independientes/${recordId}`, {
+            const response = await fetch(`${apiUrl}/Independientes 1.0/${recordId}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${apiKey}`,
@@ -898,7 +898,7 @@ async function replaceData() {
         const batch = records.slice(i, i + 10);
 
         try {
-            const response = await fetch(`${apiUrl}/Independientes`, {
+            const response = await fetch(`${apiUrl}/Independientes 1.0`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${apiKey}`,
