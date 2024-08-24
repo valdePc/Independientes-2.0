@@ -349,42 +349,84 @@ td:hover {
             
         };
 
-        function populateFields() {
-    const selectedCoach = document.getElementById('coach').value;
+        function clearFields() {
+            // Limpiar campos básicos
+           
+            document.getElementById('zoom').value = '';
+            document.getElementById('zoomPassword').value = '';
+            document.getElementById('emergencyRoom').value = '';
+            document.getElementById('emergencyRoomLink').href = '#'; // Restablecer el enlace de la sala de emergencia
+            document.getElementById('emergencyRoomLink').style.display = 'none'; // Ocultar el enlace de la sala de emergencia
+            document.getElementById('emergencyRoom').style.display = 'block'; // Mostrar el campo de texto de la sala de emergencia en blanco
 
-    if (selectedCoach === "") {
-        // Limpiar los campos si se selecciona "Seleccione un coach"
-        document.getElementById('portal').value = '';
-        document.getElementById('password').value = '';
-        document.getElementById('zoom').value = '';
-        document.getElementById('zoomPassword').value = '';
-        document.getElementById('emergencyRoom').value = '';
-        document.getElementById('emergencyRoomLink').style.display = 'none'; // Ocultar el enlace de la sala de emergencia
-        document.getElementById('emergencyRoom').style.display = 'block'; // Mostrar el campo de texto de la sala de emergencia en blanco
-    } else if (coachData[selectedCoach]) {
-        // Rellenar los campos con los datos del coach seleccionado
-        document.getElementById('portal').value = coachData[selectedCoach].portal;
-        document.getElementById('password').value = coachData[selectedCoach].password;
-        document.getElementById('zoom').value = coachData[selectedCoach].zoom;
-        document.getElementById('zoomPassword').value = coachData[selectedCoach].zoomPassword;
+            // Limpiar campos adicionales
+            document.getElementById('date').value = '';
+            document.getElementById('coach').value = '';
+            document.getElementById('country').value = '';
+            document.getElementById('hours').value = '';
+            document.getElementById('duracion').value = '';
+            document.getElementById('note').value = '';
+            document.getElementById('portal').value = '';
+            document.getElementById('password').value = '';
+            
+            // Limpiar las filas de la tabla
+            const tableBody = document.getElementById('hoursTable').querySelector('tbody');
+            while (tableBody.firstChild) {
+                tableBody.removeChild(tableBody.firstChild);
+            }
 
-        const emergencyRoomLink = document.getElementById('emergencyRoomLink');
-        const emergencyRoomInput = document.getElementById('emergencyRoom');
-        const emergencyRoomURL = coachData[selectedCoach].emergencyRoom;
-
-        if (emergencyRoomURL && emergencyRoomURL !== 'No entregada') {
-            emergencyRoomLink.href = emergencyRoomURL;
-            emergencyRoomLink.style.display = 'block';
-            emergencyRoomInput.style.display = 'none';
-        } else {
-            emergencyRoomInput.value = emergencyRoomURL;
-            emergencyRoomInput.style.display = 'block';
-            emergencyRoomLink.style.display = 'none';
+            // Limpiar opciones de eliminación de horas
+            const deleteHourSelect = document.getElementById('deleteHour');
+            deleteHourSelect.innerHTML = '';
         }
+
+        function populateFields() {
+            const selectedCoach = document.getElementById('coach').value;
+
+            if (selectedCoach === "") {
+                // Llamar a la función clearFields para limpiar todos los campos
+                clearFields();
+            } else if (coachData[selectedCoach]) {
+                // Rellenar los campos con los datos del coach seleccionado
+                document.getElementById('portal').value = coachData[selectedCoach].portal;
+                document.getElementById('password').value = coachData[selectedCoach].password;
+                document.getElementById('zoom').value = coachData[selectedCoach].zoom;
+                document.getElementById('zoomPassword').value = coachData[selectedCoach].zoomPassword;
+
+                const emergencyRoomLink = document.getElementById('emergencyRoomLink');
+                const emergencyRoomInput = document.getElementById('emergencyRoom');
+                const emergencyRoomURL = coachData[selectedCoach].emergencyRoom;
+
+                if (emergencyRoomURL && emergencyRoomURL !== 'No entregada') {
+                    emergencyRoomLink.href = emergencyRoomURL;
+                    emergencyRoomLink.style.display = 'block';
+                    emergencyRoomInput.style.display = 'none';
+                } else {
+                    emergencyRoomInput.value = emergencyRoomURL;
+                    emergencyRoomInput.style.display = 'block';
+                    emergencyRoomLink.style.display = 'none';
+                }
+            }
+        }
+
+
+
+function clearHours() {
+    const tableBody = document.getElementById('hoursTable').querySelector('tbody');
+    while (tableBody.firstChild) {
+        tableBody.removeChild(tableBody.firstChild);
     }
+    document.getElementById('date').value = '';
+    document.getElementById('coach').value = '';
+    document.getElementById('country').value = '';
+    document.getElementById('hours').value = '';
+    document.getElementById('duracion').value = '';
+    document.getElementById('note').value = '';
+
+    // Limpiar opciones de eliminación de horas
+    const deleteHourSelect = document.getElementById('deleteHour');
+    deleteHourSelect.innerHTML = '';
 }
-
-
 
         function adjustTime(time, country) {
             const result = {};
@@ -577,7 +619,7 @@ async function saveData() {
 
 
 
-        const apiUrl = 'https://api.airtable.com/v0/appVuMTXFU8YHrGND';
+const apiUrl = 'https://api.airtable.com/v0/appx4eD3f7NINswZW/tbl2MWinby5r3q96q';
         const apiKey = 'pat9wBOS3cEULZjbM.46a19c678b7b3a403febb212e0ec73de16f408d4193bf476a5d7348c23be39b1';
 
 

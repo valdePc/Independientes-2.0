@@ -349,48 +349,14 @@ td:hover {
             
         };
 
-       function populateFields() {
-    const selectedCoach = document.getElementById('coach').value;
-
-    if (selectedCoach === "") {
-        // Si no se selecciona un coach, limpiar todos los campos
-        clearFields();
-    } else if (coachData[selectedCoach]) {
-        // Si se selecciona un coach, llenar los campos correspondientes
-        document.getElementById('portal').value = coachData[selectedCoach].portal;
-        document.getElementById('password').value = coachData[selectedCoach].password;
-        document.getElementById('zoom').value = coachData[selectedCoach].zoom;
-        document.getElementById('zoomPassword').value = coachData[selectedCoach].zoomPassword;
-
-        const emergencyRoomLink = document.getElementById('emergencyRoomLink');
-        const emergencyRoomInput = document.getElementById('emergencyRoom');
-        const emergencyRoomURL = coachData[selectedCoach].emergencyRoom;
-
-        if (emergencyRoomURL && emergencyRoomURL !== 'No entregada') {
-            emergencyRoomLink.href = emergencyRoomURL;
-            emergencyRoomLink.style.display = 'block';
-            emergencyRoomInput.style.display = 'none';
-        } else {
-            emergencyRoomInput.value = emergencyRoomURL;
-            emergencyRoomInput.style.display = 'block';
-            emergencyRoomLink.style.display = 'none';
-        }
-    } else {
-        // Si el coach seleccionado no está en coachData, limpiar los campos también
-        clearFields();
-    }
-}
-
-function clearFields() {
+        function clearFields() {
     // Limpiar campos básicos
-    document.getElementById('portal').value = '';
-    document.getElementById('password').value = '';
     document.getElementById('zoom').value = '';
     document.getElementById('zoomPassword').value = '';
     document.getElementById('emergencyRoom').value = '';
-    document.getElementById('emergencyRoomLink').href = '#';
-    document.getElementById('emergencyRoomLink').style.display = 'none';
-    document.getElementById('emergencyRoom').style.display = 'block';
+    document.getElementById('emergencyRoomLink').href = '#'; // Restablecer el enlace de la sala de emergencia
+    document.getElementById('emergencyRoomLink').style.display = 'none'; // Ocultar el enlace de la sala de emergencia
+    document.getElementById('emergencyRoom').style.display = 'block'; // Mostrar el campo de texto de la sala de emergencia en blanco
 
     // Limpiar campos adicionales
     document.getElementById('date').value = '';
@@ -399,6 +365,12 @@ function clearFields() {
     document.getElementById('hours').value = '';
     document.getElementById('duracion').value = '';
     document.getElementById('note').value = '';
+    
+    // Limpiar campos de Portal y Contraseñas
+    document.getElementById('portal').value = ''; 
+    document.getElementById('password').value = ''; 
+    document.getElementById('zoom').value = ''; 
+    document.getElementById('zoomPassword').value = ''; 
 
     // Limpiar las filas de la tabla
     const tableBody = document.getElementById('hoursTable').querySelector('tbody');
@@ -410,14 +382,15 @@ function clearFields() {
     const deleteHourSelect = document.getElementById('deleteHour');
     deleteHourSelect.innerHTML = '';
 }
+
 function populateFields() {
     const selectedCoach = document.getElementById('coach').value;
 
-    if (selectedCoach === "Seleccione un coach") {
-        // Si se selecciona "Seleccione un coach", limpiar todos los campos
+    if (selectedCoach === "") {
+        // Llamar a la función clearFields para limpiar todos los campos
         clearFields();
     } else if (coachData[selectedCoach]) {
-        // Si se selecciona un coach válido, llenar los campos correspondientes
+        // Rellenar los campos con los datos del coach seleccionado
         document.getElementById('portal').value = coachData[selectedCoach].portal;
         document.getElementById('password').value = coachData[selectedCoach].password;
         document.getElementById('zoom').value = coachData[selectedCoach].zoom;
@@ -436,43 +409,8 @@ function populateFields() {
             emergencyRoomInput.style.display = 'block';
             emergencyRoomLink.style.display = 'none';
         }
-    } else {
-        // Si el coach seleccionado no está en coachData, limpiar los campos también
-        clearFields();
     }
 }
-
-function clearFields() {
-    // Limpiar campos básicos
-    document.getElementById('portal').value = '';
-    document.getElementById('password').value = '';
-    document.getElementById('zoom').value = '';
-    document.getElementById('zoomPassword').value = '';
-    document.getElementById('emergencyRoom').value = '';
-    document.getElementById('emergencyRoomLink').href = '#';
-    document.getElementById('emergencyRoomLink').style.display = 'none';
-    document.getElementById('emergencyRoom').style.display = 'block';
-
-    // Limpiar campos adicionales
-    document.getElementById('date').value = '';
-    document.getElementById('coach').value = '';
-    document.getElementById('country').value = '';
-    document.getElementById('hours').value = '';
-    document.getElementById('duracion').value = '';
-    document.getElementById('note').value = '';
-
-    // Limpiar las filas de la tabla
-    const tableBody = document.getElementById('hoursTable').querySelector('tbody');
-    while (tableBody.firstChild) {
-        tableBody.removeChild(tableBody.firstChild);
-    }
-
-    // Limpiar opciones de eliminación de horas
-    const deleteHourSelect = document.getElementById('deleteHour');
-    deleteHourSelect.innerHTML = '';
-}
-
-
 
 function clearHours() {
     const tableBody = document.getElementById('hoursTable').querySelector('tbody');
@@ -489,7 +427,14 @@ function clearHours() {
     // Limpiar opciones de eliminación de horas
     const deleteHourSelect = document.getElementById('deleteHour');
     deleteHourSelect.innerHTML = '';
+
+    // Limpiar campos de Portal y Contraseñas
+    document.getElementById('portal').value = ''; 
+    document.getElementById('password').value = ''; 
+    document.getElementById('zoom').value = ''; 
+    document.getElementById('zoomPassword').value = ''; 
 }
+
 
         function adjustTime(time, country) {
             const result = {};
@@ -507,8 +452,9 @@ function clearHours() {
 
             return result;
         }
+        let existingEntries = []; // Array to store existing entries
 
-        function addHour() {
+async function addHour() {
     const hours = document.getElementById('hours').value;
     const duration = document.getElementById('duracion').value;
     const date = document.getElementById('date').value;
@@ -520,9 +466,51 @@ function clearHours() {
         return;
     }
 
-    // Obtener la fecha actual en formato YYYY-MM-DD
-    const today = new Date().toISOString().split('T')[0];
+    // Verificación local para evitar duplicados en la sesión actual
+    const duplicate = existingEntries.find(entry =>
+        entry.coach === coach &&
+        entry.fecha === date &&
+        entry.horaRD === hours
+    );
 
+    if (duplicate) {
+        alert('Ya existe un registro con los mismos datos en la tabla.');
+        return; // Detener la función si se encuentra un duplicado en la sesión actual
+    }
+
+    // Verificar si la hora ya existe en Airtable
+    const filterFormula = `AND({Coach Solicitante}="${coach}", {Fecha}="${date}", {Hora Republica Dominicana}="${hours}")`;
+
+    try {
+        const response = await fetch(`${apiUrl}/Independientes?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Error al verificar los datos en Airtable:', errorData);
+            alert('Error al verificar los datos en Airtable: ' + JSON.stringify(errorData));
+            return;
+        }
+
+        const data = await response.json();
+
+        if (data.records.length > 0) {
+            alert('Ya existe un registro en Airtable con el mismo Coach, Fecha y Hora de RD. No se puede agregar esta fila.');
+            return; // Detener la función si ya existe un registro en Airtable
+        }
+
+    } catch (error) {
+        console.error('Error al verificar los datos en Airtable:', error);
+        alert('Error al verificar los datos en Airtable.');
+        return;
+    }
+
+    // Si no hay duplicados, proceder a agregar la fila
     const adjustedTimes = adjustTime(hours, country);
     const newRow = document.createElement('tr');
 
@@ -532,17 +520,7 @@ function clearHours() {
         <td>
             <select class="coachSelect">
                 <option value="No Remplazo">Sin Reemplazo</option>
-                <option value="Josue Avila">Josue Avila</option>
-                <option value="Magnolia Zuñiga">Magnolia Zuñiga</option>
-                <option value="Juan Rodríguez">Juan Rodríguez</option>
-                <option value="Daniela Fernandez">Daniela Fernandez</option>
-                <option value="Cristian Arriagada">Cristian Arriagada</option>
-                <option value="Edwin Juarez">Edwin Juarez</option>
-                <option value="Fernanda Ortiz">Fernanda Ortiz</option>
-                <option value="Valentina Cornejo">Valentina Cornejo</option>
-                <option value="Leandro Rioja">Leandro Rioja</option>
-                <option value="Valde Pie">Valde Pie</option>
-                <option value="Otro">Otro</option>
+                <!-- Agregar opciones de coach aquí -->
             </select>
             <input type="text" class="newCoachName" placeholder="Ingrese nuevo nombre" style="display: none;">
         </td>
@@ -565,9 +543,10 @@ function clearHours() {
     `;
 
     // Si la fecha es pasada, marcar la fila en rojo
+    const today = new Date().toISOString().split('T')[0];
     if (date < today) {
         newRow.style.backgroundColor = 'red';
-        alert('La fecha ingresada es pasada. La fila se ha marcado en rojo. Porfavor elimine esa fila');
+        alert('La fecha ingresada es pasada. La fila se ha marcado en rojo. Por favor, elimine esa fila.');
     }
 
     // Agregar la fila a la tabla
@@ -578,6 +557,9 @@ function clearHours() {
     newOption.value = hours;
     newOption.text = hours;
     deleteHourSelect.appendChild(newOption);
+
+    // Agregar el nuevo registro a la lista local para evitar duplicados en la misma sesión
+    existingEntries.push({ coach, fecha: date, horaRD: hours });
 }
 
 async function saveData() {
@@ -587,13 +569,13 @@ async function saveData() {
 
     const rows = document.getElementById('hoursTable').getElementsByTagName('tbody')[0].rows;
 
-    // Recorremos las filas de la tabla para verificar duplicados en Airtable
+    // Verificar duplicados en Airtable para todas las filas de la tabla
     for (let row of rows) {
-        const coachSolicitante = coach; // Aquí debes tomar el valor seleccionado para Coach Solicitante, no el de Reemplazo
+        const coachSolicitante = coach;
         const fecha = row.cells[13].innerText;
-        const horaRD = row.cells[7].innerText; // Hora de República Dominicana
+        const horaRD = row.cells[7].innerText;
 
-        // Verificar si ya existe un registro con los mismos datos en Airtable
+        // Verificar duplicados en Airtable
         const filterFormula = `AND({Coach Solicitante}="${coachSolicitante}", {Fecha}="${fecha}", {Hora Republica Dominicana}="${horaRD}")`;
 
         try {
@@ -607,33 +589,33 @@ async function saveData() {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                console.error('Error al verificar los datos:', errorData);
-                alert('Error al verificar los datos: ' + JSON.stringify(errorData));
-                return; // Detener la función si hay un error en la verificación
+                console.error('Error al verificar los datos en Airtable:', errorData);
+                alert('Error al verificar los datos en Airtable: ' + JSON.stringify(errorData));
+                return;
             }
 
             const data = await response.json();
 
             if (data.records.length > 0) {
-                // Si ya existe un registro con la misma combinación de Coach, Fecha y Hora RD
-                alert(`Ya existe un registro con el Coach ${coachSolicitante}, la Fecha ${fecha} y la Hora de RD ${horaRD}. No se puede guardar un duplicado.`);
-                return; // Detener la función para evitar duplicados
+                // Si ya existe un registro con la misma combinación en Airtable
+                alert(`Ya existe un registro en Airtable con el Coach ${coachSolicitante}, la Fecha ${fecha} y la Hora de RD ${horaRD}. No se puede guardar un duplicado.`);
+                return; // Detener la función para evitar guardar duplicados
             }
 
         } catch (error) {
-            console.error('Error:', error);
-            alert('Error al verificar los datos.');
-            return; // Detener la función si hay un error en la verificación
+            console.error('Error al verificar los datos en Airtable:', error);
+            alert('Error al verificar los datos en Airtable.');
+            return;
         }
     }
 
-    // Si no hay duplicados, procedemos a construir los registros para guardar
+    // Si no hay duplicados en Airtable, procedemos a construir los registros para guardar
     let records = [];
 
     for (let row of rows) {
         records.push({
             fields: {
-                "Coach Solicitante": coach, // Aquí debe ir el valor correcto de Coach Solicitante
+                "Coach Solicitante": coach,
                 "País": country,
                 "Duración": row.cells[1].innerText,
                 "Coach de Reemplazo": row.cells[2].getElementsByTagName('select')[0].value,
@@ -673,11 +655,34 @@ async function saveData() {
             const data = await response.json();
             console.log('Datos guardados con éxito:', data);
             alert('Datos guardados con éxito.');
+
+            // Limpiar los campos y la tabla después de guardar
+            clearForm();
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error al guardar los datos:', error);
         alert('Error al guardar los datos.');
     }
+}
+
+function clearForm() {
+    // Limpiar los campos del formulario
+    document.getElementById('coach').value = '';
+    document.getElementById('country').value = '';
+    document.getElementById('note').value = '';
+    document.getElementById('hours').value = '';
+    document.getElementById('duracion').value = '';
+    document.getElementById('date').value = '';
+
+    // Limpiar la tabla
+    const tableBody = document.getElementById('hoursTable').getElementsByTagName('tbody')[0];
+    while (tableBody.firstChild) {
+        tableBody.removeChild(tableBody.firstChild);
+    }
+
+    // Limpiar el selector de horas para eliminar
+    const deleteHourSelect = document.getElementById('deleteHour');
+    deleteHourSelect.innerHTML = ''; // Elimina todas las opciones
 }
 
 
