@@ -727,7 +727,7 @@ function clearForm() {
     console.log('Filter Formula:', filterFormula);
 
     try {
-        const response = await fetch(`${apiUrl}/Independientes 2.0?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+        const response = await fetch(`${apiUrl}/Independientes 1.0?filterByFormula=${encodeURIComponent(filterFormula)}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${apiKey}`,
