@@ -10,7 +10,7 @@
             margin: 0;
             padding: 0;
             background: linear-gradient(to right, #00c6ff, #00a9b5);
-            color: #333;
+            color:black;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -85,12 +85,22 @@
             transition: background 0.3s ease;
         }
         .form-group button:hover {
-            background: #007BFF;
+            background: green;
+        }
+        .image-container {
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            max-width: 100%;
+            border-radius: 8px;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="image-container">
+            <img src="images/Copia_de_Nuevos_fondos_2023-removebg-preview.png" alt="Logo de Linguameeting">
+        </div>
         <h1>Portal de Acceso</h1>
         <div class="form-group">
             <label for="group">Selecciona tu grupo:</label>
@@ -139,4 +149,4 @@
         }
     </script>
 </body>
-</html
+</html>
