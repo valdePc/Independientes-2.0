@@ -215,10 +215,26 @@
         #salirBtn:hover {
             background-color: darkred;
         }
+         /* Estilo para el botón BDD1.0 */
+         .floating-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
     <button id="salirBtn" onclick="window.location.href='index.html';">Salir</button>
+    <button class="floating-button" onclick="checkPassword()">BDD/1.0</button>
     <div class="container">
         <div class="container">
             <div class="logo">
@@ -953,6 +969,15 @@ async function replaceData() {
             document.getElementById('country').value = '';
             document.getElementById('hours').value = '';
             document.getElementById('duracion').value = '';
+        }
+        function checkPassword() {
+            const password = prompt("Por favor, ingrese la contraseña:");
+
+            if (password === "Indepe1!0") {
+                window.location.href = "https://airtable.com/invite/l?inviteId=invKBDwC0WEBChOj2&inviteToken=2dc5bcb71bdc508b2790862b607e2d994b26330f3c385413a008a973113d6b55&utm_medium=email&utm_source=product_team&utm_content=transactional-alerts";
+            } else {
+                alert("Contraseña incorrecta.");
+            }
         }
     </script>
 </body>
