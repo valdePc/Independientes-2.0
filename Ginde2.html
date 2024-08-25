@@ -713,7 +713,6 @@ function clearForm() {
 
 
 
-        
         async function searchRecords() {
     const coach = document.getElementById('coach').value;
 
@@ -722,21 +721,20 @@ function clearForm() {
         return;
     }
 
-    // Obtener la fecha actual en formato YYYY-MM-DD
-    const today = new Date().toISOString().split('T')[0];
+    // Fórmula para filtrar solo por Coach Solicitante
+    const filterFormula = `{Coach Solicitante}="${coach}"`;
 
-    // Fórmula para filtrar por Coach Solicitante y fechas a partir de hoy
-    const filterFormula = `AND({Coach Solicitante}="${coach}", IS_AFTER({Fecha}, "${today}"))`;
+    // Mostrar los valores en consola para depuración
+    console.log('Coach:', coach);
+    console.log('Filter Formula:', filterFormula);
 
     try {
         const response = await fetch(`${apiUrl}/Independientes 2.0?filterByFormula=${encodeURIComponent(filterFormula)}`, {
             method: 'GET',
             headers: {
-                
                 'Authorization': `Bearer ${apiKey}`,
                 'Content-Type': 'application/json'
             }
-            
         });
 
         if (!response.ok) {
@@ -745,7 +743,7 @@ function clearForm() {
             alert('Error al buscar los datos: ' + JSON.stringify(errorData));
         } else {
             const data = await response.json();
-            console.log('Datos recibidos:', data); 
+            console.log('Datos recibidos:', data);
 
             const tableBody = document.getElementById('hoursTable').getElementsByTagName('tbody')[0];
             tableBody.innerHTML = '';
@@ -829,6 +827,7 @@ function clearForm() {
     }
 }
 
+       
         async function replaceData() {
     const rows = document.getElementById('hoursTable').getElementsByTagName('tbody')[0].rows;
     let records = [];
