@@ -719,21 +719,20 @@ function clearForm() {
         return;
     }
 
-    // Obtener la fecha actual en formato YYYY-MM-DD
-    const today = new Date().toISOString().split('T')[0];
+    // Fórmula para filtrar solo por Coach Solicitante
+    const filterFormula = `{Coach Solicitante}="${coach}"`;
 
-    // Fórmula para filtrar por Coach Solicitante y fechas a partir de hoy
-    const filterFormula = `AND({Coach Solicitante}="${coach}", IS_AFTER({Fecha}, "${today}"))`;
+    // Mostrar los valores en consola para depuración
+    console.log('Coach:', coach);
+    console.log('Filter Formula:', filterFormula);
 
     try {
-        const response = await fetch(`${apiUrl}/Independientes 1.0?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+        const response = await fetch(`${apiUrl}/Independientes 2.0?filterByFormula=${encodeURIComponent(filterFormula)}`, {
             method: 'GET',
             headers: {
-                
                 'Authorization': `Bearer ${apiKey}`,
                 'Content-Type': 'application/json'
             }
-            
         });
 
         if (!response.ok) {
@@ -742,7 +741,7 @@ function clearForm() {
             alert('Error al buscar los datos: ' + JSON.stringify(errorData));
         } else {
             const data = await response.json();
-            console.log('Datos recibidos:', data); 
+            console.log('Datos recibidos:', data);
 
             const tableBody = document.getElementById('hoursTable').getElementsByTagName('tbody')[0];
             tableBody.innerHTML = '';
@@ -761,9 +760,8 @@ function clearForm() {
                     const coachSelect = document.createElement('select');
                     coachSelect.classList.add('coachSelect');
                     const coaches = [
-                    "No Remplazo", "Lara Bravo", "Selene Cidoncha", "Eduardo Vaz", "Camila Muñoz",
-                                "Alejandro Alvarez", "Miriam Bautista", "Karla Guel", "Zachery Sanchez", "Imnovis Cortez", "Ileana Plata", "Nelson Guido", "Sofia Gutierrez","Otro"
-
+                        "No Remplazo", "Josue Avila", "Magnolia Zuñiga", "Juan Rodríguez", "Daniela Fernandez",
+                        "Cristian Arriagada", "Edwin Juarez", "Fernanda Ortiz", "Valentina Cornejo", "Valde Pie", "Otro"
                     ];
                     coaches.forEach(coachName => {
                         const option = document.createElement('option');
@@ -826,6 +824,7 @@ function clearForm() {
         alert('Error al buscar los datos.');
     }
 }
+
 
 async function replaceData() {
     const rows = document.getElementById('hoursTable').getElementsByTagName('tbody')[0].rows;
