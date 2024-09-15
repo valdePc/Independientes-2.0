@@ -261,9 +261,6 @@
                     <option value="Fernanda Ortiz">Fernanda Ortiz</option>
                     <option value="Valentina Cornejo">Valentina Cornejo</option>
                     <option value="Leandro Rioja">Leandro Rioja</option>
-                    <option value="Francheska Santiago">Francheska Santiago</option>
-                    <option value="Laura">Laura</option>
-                    <option value="Tatiana Carmen">Tatiana Carmen</option>
                     <option value="Valde Pie">Valde Pie</option>
                 </select>
                 <span id="coachError" class="error">Por favor, seleccione un coach.</span>
@@ -384,25 +381,19 @@
             'Fernanda Ortiz': { portal: 'ortizcortezfernanda7@gmail.com', password: 'Fernandita2002&', zoom: 'ortizcortezfernanda7@gmail.com', zoomPassword: 'fernandita2002', emergencyRoom: 'https://linguameeting.zoom.us/j/95638745486?pwd=ayIYgKyXMarDZFBIPUGp8xO0qS7ea0.1' },
             'Valentina Cornejo': { portal: 'moonsomnia@hotmail.com', password: 'GrahamVelasco123#', zoom: 'moonsomnia@hotmail.com', zoomPassword: 'kariyamasaki1', emergencyRoom: 'https://linguameeting.zoom.us/j/98815343064?pwd=z0TU1oKoqtIVYbDs1bymsOWGRdOi4t.1' },
             'Leandro Rioja': { portal: 'lrioja02@gmail.com', password: 'Le@n2002', zoom: 'lrioja02@gmail.com', zoomPassword: 'Lean2002', emergencyRoom: 'https://linguameeting.zoom.us/j/6882524640?pwd=BPb4TN8diEMo4AcPkUcphZKMErV9yE.1' },
-            'Francheska Santiago': { portal: 'santiagofrancheska66@gmail.com', password: '5%upWE', zoom: 'santiagofrancheska66@gmail.com', zoomPassword: 'Santiagofrancheska66+-', emergencyRoom: 'https://linguameeting.zoom.us/j/92345533215?pwd=uSkPdYQ7p9LHukDyM8HR98fpbqWDTt.1' },
-            'Laura': { portal: 'lauragarciacastrillo@gmail.com', password: 'Educacion7&', zoom: 'lauragarciacastrillo@gmail.com', zoomPassword: 'Educacion7&', emergencyRoom: 'https://linguameeting.zoom.us/j/92110499917?pwd=6ZPrbtl4IfH7lHELXfvabZLKC2SdkH.1' },
-            'Tatiana Carmen': { portal: 'tatiananadia68@gmail.com', password: 'Os1to$', zoom: 'tatiananadia68@gmail.com', zoomPassword: 'Rocky018', emergencyRoom: 'https://linguameeting.zoom.us/j/99368604276?pwd=eCOdacifxNRyZbmbkKsTxIiM3ZbMDC.1' },
             'Valde Pie': { portal: 'valdecenpues@gmail.com', password: '123456', zoom: 'valdecenpues@gmail.com', zoomPassword: '123456', emergencyRoom: 'https://linguameeting.zoom.us/j/99936151655?pwd=K2tKckQ2Y3FnZFV5ZWhTMU5KTW9EZz09' }
         };
 
         const coachCountries = {
-            'Josue Avila': "Guatemala",
-            'Magnolia Zuñiga': "Guatemala",
-            'Juan Rodríguez': "Panamá",
-            'Daniela Fernandez': "Costa Rica",
+            'Josue Avila': "Panamá",
+            'Magnolia Zuñiga': "Costa Rica",
+            'Juan Rodríguez': "España",
+            'Daniela Fernandez': "Argentina",
             'Cristian Arriagada': "Chile",
-            'Edwin Juarez': "Nicaragua",
-            'Fernanda Ortiz': "Chile",
-            'Valentina Cornejo': "Chile",
-            'Leandro Rioja': "Chile",
-            'Francheska Santiago': "República Dominicana",
-            'Laura': "España",
-            'Tatiana Carmen': "Argentina",
+            'Edwin Juarez': "Guatemala",
+            'Fernanda Ortiz': "Nicaragua",
+            'Valentina Cornejo': "República Dominicana",
+            'Leandro Rioja': "EST",
             'Valde Pie': "República Dominicana"
         };
 
@@ -767,7 +758,7 @@
                             coachSelect.classList.add('coachSelect');
                             const coaches = [
                                 "No Remplazo", "Josue Avila", "Magnolia Zuñiga", "Juan Rodríguez", "Daniela Fernandez",
-                                "Cristian Arriagada", "Edwin Juarez", "Fernanda Ortiz", "Valentina Cornejo","Francheska Santiago","Laura","Tatitana","Valde Pie", "Otro"
+                                "Cristian Arriagada", "Edwin Juarez", "Fernanda Ortiz", "Valentina Cornejo", "Valde Pie", "Otro"
                             ];
                             coaches.forEach(coachName => {
                                 const option = document.createElement('option');
