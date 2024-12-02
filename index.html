@@ -6,61 +6,62 @@
     <title>Portal de Acceso - Independientes</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(to right, #00c6ff, #00a9b5);
-            color: black;
+            background: linear-gradient(to bottom right, #f0f4f8, #d9e6f2);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            transition: background 0.5s ease;
         }
         .container {
-            background: white;
+            background: #ffffff;
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             text-align: center;
             max-width: 400px;
             width: 100%;
-            animation: fadeIn 1s ease-in-out;
+            animation: fadeIn 0.8s ease-in-out;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
         h1 {
-            color: #00a9b5;
+            color: #007b8f;
             margin-bottom: 20px;
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 28px;
+            font-weight: 600;
         }
         .form-group {
             margin-bottom: 20px;
             position: relative;
+            text-align: left;
         }
         .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
             font-size: 14px;
-            text-align: left;
+            color: #444;
         }
-        .form-group select, .form-group input {
+        .form-group select, 
+        .form-group input {
             width: 100%;
             padding: 12px;
             border: 1px solid #ccc;
             border-radius: 8px;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-            font-size: 14px;
-            transition: border 0.3s ease;
+            font-size: 16px;
+            transition: border 0.3s ease, box-shadow 0.3s ease;
             box-sizing: border-box;
         }
-        .form-group select:focus, .form-group input:focus {
-            border: 1px solid #00a9b5;
-            box-shadow: 0 0 8px rgba(0, 114, 255, 0.3);
+        .form-group select:focus, 
+        .form-group input:focus {
+            border-color: #007b8f;
+            box-shadow: 0 0 8px rgba(0, 123, 143, 0.3);
             outline: none;
         }
         .toggle-password {
@@ -70,22 +71,25 @@
             transform: translateY(-50%);
             cursor: pointer;
             font-size: 18px;
-            color: #00a9b5;
+            color: #007b8f;
         }
         .form-group button {
             width: 100%;
             padding: 12px;
-            background: #00a9b5;
+            background: #007b8f;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            margin-top: 20px;
             font-size: 16px;
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, transform 0.2s ease;
         }
         .form-group button:hover {
-            background: green;
+            background: #005f6b;
+            transform: translateY(-2px);
+        }
+        .form-group button:active {
+            transform: translateY(1px);
         }
         .image-container {
             margin-bottom: 20px;
@@ -94,6 +98,93 @@
             max-width: 100%;
             border-radius: 8px;
         }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 24px;
+            }
+            .form-group button {
+                font-size: 14px;
+            }
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to bottom right, #f0f4f8, #d9e6f2);
+        }
+
+        .dynamic-button {
+            position: relative;
+            padding: 15px 30px;
+            background: #007b8f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            overflow: hidden;
+            outline: none;
+            transition: background 0.3s ease;
+        }
+
+        .dynamic-button:hover {
+            background: #005f6b;
+        }
+
+        .dynamic-button .truck {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            transition: left 0.6s ease;
+        }
+
+        .dynamic-button .truck .body {
+            width: 40px;
+            height: 20px;
+            background: #fff;
+            border-radius: 3px;
+            position: relative;
+        }
+
+        .dynamic-button .truck .body:before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            width: 24px;
+            height: 10px;
+            background: #ff6347;
+            border-radius: 3px;
+            transform: translateX(-50%);
+        }
+
+        .dynamic-button .truck .wheels {
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            bottom: -8px;
+            width: 100%;
+        }
+
+        .dynamic-button .truck .wheels .wheel {
+            width: 10px;
+            height: 10px;
+            background: #333;
+            border-radius: 50%;
+        }
+
+        .dynamic-button:active .truck {
+            left: 100%;
+        }
+
     </style>
 </head>
 <body>
@@ -113,63 +204,63 @@
             <input type="password" id="password" placeholder="Ingresa la contraseña">
             <span class="toggle-password" onclick="togglePassword()">👁️</span>
         </div>
-        <div class="form-group">
-            <button onclick="accessGroup()">Acceder</button>
-        </div>
+        <button class="dynamic-button" onclick="redirectToPage()">
+            <span class="truck">
+                <div class="body"></div>
+                <div class="wheels">
+                    <div class="wheel"></div>
+                    <div class="wheel"></div>
+                </div>
+            </span>
+       .----Acceder---
+        </button>
     </div>
 
     <script>
         const apiUrl = 'https://api.airtable.com/v0/appVuMTXFU8YHrGND/Grupos';
         const apiKey = 'Bearer pat9wBOS3cEULZjbM.46a19c678b7b3a403febb212e0ec73de16f408d4193bf476a5d7348c23be39b1';
 
-        // Carga los grupos desde Airtable
         async function loadGroups() {
-    try {
-        const response = await fetch(apiUrl, {
-            headers: {
-                Authorization: apiKey
+            try {
+                const response = await fetch(apiUrl, {
+                    headers: { Authorization: apiKey }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+
+                const { records } = await response.json();
+                const groupSelect = document.getElementById('group');
+
+                if (records.length === 0) {
+                    alert('No hay grupos disponibles en este momento.');
+                    return;
+                }
+
+                records.forEach(record => {
+                    const groupName = record.fields['Nombre de grupos'];
+                    const groupPassword = record.fields['Contraseña de grupos'];
+
+                    if (!groupName || !groupPassword) {
+                        console.warn(`Registro incompleto: ${JSON.stringify(record.fields)}`);
+                        return;
+                    }
+
+                    const option = document.createElement('option');
+                    option.value = groupName;
+                    option.dataset.password = groupPassword;
+                    option.textContent = groupName;
+                    groupSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error al cargar los grupos desde Airtable:', error);
+                alert('No se pudieron cargar los grupos. Inténtalo más tarde.');
             }
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
         }
-
-        const { records } = await response.json();
-        const groupSelect = document.getElementById('group');
-
-        // Verifica que haya registros
-        if (records.length === 0) {
-            alert('No hay grupos disponibles en este momento.');
-            return;
-        }
-
-        // Agrega cada grupo al dropdown
-        records.forEach(record => {
-            const groupName = record.fields['Nombre de grupos'];
-            const groupPassword = record.fields['Contraseña de grupos'];
-
-            // Validar que el registro esté completo
-            if (!groupName || !groupPassword) {
-                console.warn(`Registro incompleto: ${JSON.stringify(record.fields)}`);
-                return;
-            }
-
-            const option = document.createElement('option');
-            option.value = groupName;
-            option.dataset.password = groupPassword;
-            option.textContent = groupName;
-            groupSelect.appendChild(option);
-        });
-    } catch (error) {
-        console.error('Error al cargar los grupos desde Airtable:', error);
-        alert('No se pudieron cargar los grupos. Inténtalo más tarde.');
-    }
-}
 
         document.addEventListener('DOMContentLoaded', loadGroups);
 
-        // Muestra/oculta la contraseña
         function togglePassword() {
             const passwordField = document.getElementById('password');
             const toggleIcon = document.querySelector('.toggle-password');
@@ -181,25 +272,22 @@
                 toggleIcon.textContent = '👁️';
             }
         }
-function accessGroup() {
+        function redirectToPage() {
     const groupSelect = document.getElementById('group');
     const selectedOption = groupSelect.options[groupSelect.selectedIndex];
     const groupPassword = selectedOption.dataset.password;
     const enteredPassword = document.getElementById('password').value;
 
-    // Verifica si seleccionaron un grupo
     if (selectedOption.value === "default") {
         alert("Por favor, selecciona un grupo.");
         return;
     }
 
-    // Verifica si el grupo tiene contraseña
     if (!groupPassword) {
         alert("Este grupo no tiene una contraseña asignada. Contacta al administrador.");
         return;
     }
 
-    // Verifica la contraseña ingresada
     if (enteredPassword === groupPassword) {
         sessionStorage.setItem('groupName', selectedOption.value);
         alert('Acceso permitido. Redirigiendo...');
@@ -209,7 +297,32 @@ function accessGroup() {
     }
 }
 
-       
+
+        function accessGroup() {
+            const groupSelect = document.getElementById('group');
+            const selectedOption = groupSelect.options[groupSelect.selectedIndex];
+            const groupPassword = selectedOption.dataset.password;
+            const enteredPassword = document.getElementById('password').value;
+
+            if (selectedOption.value === "default") {
+                alert("Por favor, selecciona un grupo.");
+                return;
+            }
+
+            if (!groupPassword) {
+                alert("Este grupo no tiene una contraseña asignada. Contacta al administrador.");
+                return;
+            }
+
+            if (enteredPassword === groupPassword) {
+                sessionStorage.setItem('groupName', selectedOption.value);
+                alert('Acceso permitido. Redirigiendo...');
+                window.location.href = 'Reemplazos.html';
+            } else {
+                alert('Contraseña incorrecta. Por favor, intenta nuevamente.');
+            }
+        }
+        
     </script>
 </body>
 </html>
