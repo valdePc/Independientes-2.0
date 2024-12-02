@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reemplazos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9fafb;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header img {
+            max-width: 100px;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            color: #007b8f;
+            font-size: 2.5rem;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #007b8f;
+            box-shadow: 0 0 6px rgba(0, 123, 143, 0.2);
+            outline: none;
+        }
+
+        .form-group textarea {
+            resize: none;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .buttons button {
+            padding: 12px 24px;
+            border: none;
+            background-color: #007b8f;
+            color: white;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .buttons button:hover {
+            background-color: #005f6b;
+            transform: translateY(-2px);
+        }
+
+        .buttons button:active {
+            transform: translateY(1px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table th,
+        table td {
+            border: 1px solid #eaeaea;
+            padding: 12px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #007b8f;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #eef7f9;
+        }
+
+        .floating-button {
+            position: fixed;
+            bottom: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .floating-button:hover {
+            transform: scale(1.1);
+        }
+
+        #bddButton {
+            left: 20px;
+            background-color: #4caf50;
+        }
+
+        #exitButton {
+            right: 20px;
+            background-color: #e63946;
+        }
+
+        @media (max-width: 768px) {
+            .buttons {
+                flex-direction: column;
+            }
+
+            table th,
+            table td {
+                padding: 8px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="images\Copia_de_Nuevos_fondos_2023-removebg-preview.png" alt="Logo">
+        <div class="header">
+ 
+            <h1>Reemplazos</h1>
+        </div>
+        <form id="replacementForm">
+            <!-- Primera fila: Fecha, Coach Solicitante y País -->
+            <div class="form-group" style="display: flex; gap: 10px;">
+                <div style="flex: 1;">
+                    <label for="date">Fecha:</label>
+                    <input type="date" id="date">
+                </div>
+                <div style="flex: 1;">
+                    <label for="coach">Coach Solicitante:</label>
+                    <select id="coach">
+                        <option value="">Seleccione un coach</option>
+                    </select>
+                </div>
+                <div style="flex: 1;">
+                    <label for="country">País:</label>
+                    <select id="country">
+                        <option value="">Seleccione un país</option>
+                        <option value="España">España</option>
+                        <option value="Panamá">Panamá</option>
+                        <option value="EST">EST</option>
+                        <option value="República Dominicana">República Dominicana</option>
+                        <option value="Argentina">Argentina</option>
+                        <option value="Costa Rica">Costa Rica</option>
+                        <option value="Guatemala">Guatemala</option>
+                        <option value="Nicaragua">Nicaragua</option>
+                        <option value="Chile">Chile</option>
+                        <option value="Ecuador">Ecuador</option>
+                        <option value="Perú">Perú</option>
+                
+                    </select>
+                </div>
+            </div>
+        
+            <!-- Segunda fila: Horas, Duración y Nota -->
+            <div class="form-group" style="display: flex; gap: 10px;">
+                <div style="flex: 1;">
+                    <label for="hours">Horas:</label>
+                    <input type="time" id="hours">
+                </div>
+                <div style="flex: 1;">
+                    <label for="duration">Duración:</label>
+                    <select id="duration">
+                        <option value="">Seleccione la duración</option>
+                        <option value="15">15 minutos</option>
+                        <option value="30">30 minutos</option>
+                        <option value="45">45 minutos</option>
+                    </select>
+                </div>
+                <div style="flex: 2;">
+                    <label for="note">Nota para el Coach de Reemplazo:</label>
+                    <textarea id="note" rows="2" placeholder="Escribe una nota..."></textarea>
+                </div>
+            </div>
+        
+            <!-- Botones de acciones -->
+            <div class="buttons" style="margin-top: 20px;">
+                <button type="button" id="addHour">Agregar Hora</button>
+                <button type="button" id="deleteHour">Eliminar Hora</button>
+            </div>
+
+                <input type="text" id="portal" placeholder="Portal" readonly>
+                <input type="text" id="password" placeholder="Contraseña" readonly>
+                <input type="text" id="zoom" placeholder="Zoom" readonly>
+                <input type="text" id="zoomPassword" placeholder="Contraseña (Zoom)" readonly>
+                <a id="emergencyRoomLink" href="#" target="_blank" style="display:none;">Sala de Emergencia</a>
+                <input type="text" id="emergencyRoom" placeholder="Sala de Emergencia" readonly style="display:inline;">
+            </div>
+            <div class="form-group" style="margin-top: 20px;">
+                <label for="deleteHourSelect">Seleccione la hora a eliminar:</label>
+                <select id="deleteHourSelect">
+                    <option value="">Seleccione una hora</option>
+                </select>
+              
+            </div>
+            
+            <div class="form-group" style="margin-top: 20px;">
+                <label for="nameSelect">Seleccione un nombre:</label>
+                <select id="nameSelect">
+                    <option value="">Seleccione un nombre</option>
+                </select>
+            </div>
+            
+        </form>
+        <table>
+            <thead>
+                <tr>
+                    <th>Hora</th>
+                    <th>Duración</th>
+                    <th>Coach de Reemplazo</th>
+                    <th>Tipo de Reemplazo</th>
+                    <th>España</th>
+                    <th>Panamá</th>
+                    <th>EST</th>
+                    <th>República Dominicana</th>
+                    <th>Argentina</th>
+                    <th>Costa Rica</th>
+                    <th>Guatemala</th>
+                    <th>Nicaragua</th>
+                    <th>Chile</th>
+                    <th>Ecuador</th>
+                    <th>Perú</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody id="hoursTableBody">
+                <!-- Las filas se agregarán dinámicamente -->
+            </tbody>
+        </table>
+        
+        <div class="buttons" style="margin-top: 20px;">
+            <button onclick="saveDataToAirtable()">Guardar</button>
+            <button onclick="replaceData()">Reemplazar</button>
+            <button onclick="searchRecords()">Buscar</button>
+        </div>
+           
+    </div>
+    <button id="bddButton" class="floating-button">BDD</button>
+    <button id="exitButton" class="floating-button" onclick="redirectToIndex()">Salir</button>
+
+    <script>
+        const apiUrlBase = 'https://api.airtable.com/v0/appVuMTXFU8YHrGND';
+        const apiKey = 'Bearer pat9wBOS3cEULZjbM.46a19c678b7b3a403febb212e0ec73de16f408d4193bf476a5d7348c23be39b1';
+    
+        // Obtener el nombre del grupo desde sessionStorage
+        const groupName = sessionStorage.getItem('groupName');
+    
+        if (!groupName) {
+            alert('No se ha seleccionado un grupo válido. Redirigiendo al inicio...');
+            window.location.href = 'index.html';
+            throw new Error('Grupo no encontrado');
+        }
+        async function loadUniqueNames() {
+    try {
+        const response = await fetch(`${apiUrlBase}/Reemplazos`, {
+            headers: { Authorization: apiKey }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        const currentDate = new Date().toISOString().split('T')[0];
+        const uniqueNames = new Set();
+
+        data.records.forEach(record => {
+            const fecha = record.fields["Fecha"];
+            const name = record.fields["Coach Solicitante"];
+
+            if (name && fecha >= currentDate) {
+                uniqueNames.add(name);
+            }
+        });
+
+        const nameSelect = document.getElementById('nameSelect');
+        nameSelect.innerHTML = '<option value="">Seleccione un nombre</option>';
+
+        uniqueNames.forEach(name => {
+            const option = document.createElement('option');
+            option.value = name;
+            option.textContent = name;
+            nameSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error al cargar nombres únicos:', error);
+    }
+}
+
+// Llenar los datos de la tabla y los campos adicionales al seleccionar un nombre
+// Llenar los datos de la tabla y los campos adicionales al seleccionar un nombre
+async function fetchDataByName(name) {
+    try {
+        const tableBody = document.getElementById('hoursTableBody');
+        tableBody.innerHTML = ''; // Limpiar la tabla
+
+        // Obtener los reemplazos del nombre seleccionado
+        const filterFormula = `SEARCH("${name}", {Coach Solicitante})`;
+        const response = await fetch(`${apiUrlBase}/Reemplazos?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+            headers: { Authorization: apiKey }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        data.records.forEach(record => {
+            const row = document.createElement('tr');
+            const fields = record.fields;
+
+            // Asignar el ID del registro como atributo data-id
+            row.setAttribute('data-id', record.id);
+
+            // Crear la celda de "Coach de Reemplazo" con lista desplegable
+            const replacementCoachCell = document.createElement('td');
+            const coachSelect = document.createElement('select');
+            coachSelect.classList.add('coachSelect');
+            coachSelect.innerHTML = `<option value="Otro">Reemplazar</option>`;
+            document.querySelectorAll('#coach option').forEach(option => {
+                if (option.value) {
+                    const newOption = document.createElement('option');
+                    newOption.value = option.value;
+                    newOption.textContent = option.textContent;
+                    coachSelect.appendChild(newOption);
+                }
+            });
+
+            // Campo para ingresar un nuevo nombre si se selecciona "Otro"
+            const newCoachInput = document.createElement('input');
+            newCoachInput.type = 'text';
+            newCoachInput.placeholder = 'Ingrese un nombre';
+            newCoachInput.style.display = 'none';
+            replacementCoachCell.appendChild(coachSelect);
+            replacementCoachCell.appendChild(newCoachInput);
+
+            // Cambiar la visibilidad del campo "Nuevo Coach"
+            coachSelect.addEventListener('change', () => {
+                if (coachSelect.value === 'Otro') {
+                    newCoachInput.style.display = 'inline';
+                    newCoachInput.focus();
+                } else {
+                    newCoachInput.style.display = 'none';
+                    newCoachInput.value = '';
+                }
+            });
+
+            // Agregar nuevo nombre a la lista desplegable
+            newCoachInput.addEventListener('blur', () => {
+                if (newCoachInput.value.trim() !== '') {
+                    const newOption = document.createElement('option');
+                    newOption.value = newCoachInput.value.trim();
+                    newOption.textContent = newCoachInput.value.trim();
+                    coachSelect.appendChild(newOption);
+                    coachSelect.value = newCoachInput.value.trim();
+                    newCoachInput.style.display = 'none';
+                }
+            });
+
+            // Crear la celda de "Tipo de Reemplazo" con lista desplegable
+            const replacementTypeCell = document.createElement('td');
+            const typeSelect = document.createElement('select');
+            typeSelect.innerHTML = `
+                <option value="Interno">Interno</option>
+                <option value="Externo">Externo</option>
+            `;
+            replacementTypeCell.appendChild(typeSelect);
+
+            // Insertar las celdas en la fila
+            row.innerHTML = `
+                <td>${fields["Hora"] || "N/A"}</td>
+                <td>${fields["Duración"] || "N/A"}</td>
+            `;
+            row.appendChild(replacementCoachCell);
+            row.appendChild(replacementTypeCell);
+
+            // Insertar las horas ajustadas para cada país
+            const countryColumns = ["España", "Panamá", "EST", "República Dominicana", "Argentina", "Costa Rica", "Guatemala", "Nicaragua", "Chile", "Ecuador", "Perú"];
+            countryColumns.forEach(country => {
+                const cell = document.createElement('td');
+                cell.textContent = fields[`Hora ${country}`] || "N/A";
+                row.appendChild(cell);
+            });
+
+            // Agregar la celda de Fecha
+            const dateCell = document.createElement('td');
+            dateCell.textContent = fields["Fecha"] || "N/A";
+            row.appendChild(dateCell);
+
+            tableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Error al traer datos por nombre:', error);
+    }
+}
+
+
+
+// Obtener datos adicionales para el nombre seleccionado
+async function fetchAdditionalData(name) {
+    try {
+        const response = await fetch(`${apiUrlBase}/TablasCoach?filterByFormula=${encodeURIComponent(`SEARCH("${name}", {Coach Solicitante})`)}`, {
+            headers: { Authorization: apiKey }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        return data.records.length > 0 ? data.records[0].fields : null;
+    } catch (error) {
+        console.error('Error al obtener datos adicionales:', error);
+        return null;
+    }
+}
+
+// Evento al seleccionar un nombre
+document.getElementById('nameSelect').addEventListener('change', (event) => {
+    const selectedName = event.target.value;
+    if (selectedName) {
+        fetchDataByName(selectedName);
+    }
+});
+
+// Cargar nombres al cargar la página
+document.addEventListener('DOMContentLoaded', loadUniqueNames);
+    
+        // Cargar los coaches desde Airtable según el grupo
+        async function loadCoaches() {
+            try {
+                const response = await fetch(`${apiUrlBase}/${encodeURIComponent(groupName)}`, {
+                    headers: { Authorization: apiKey }
+                });
+    
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+    
+                const data = await response.json();
+    
+                if (!data.records || data.records.length === 0) {
+                    alert(`No se encontraron datos para el grupo "${groupName}".`);
+                    return;
+                }
+    
+                const coachSelect = document.getElementById('coach');
+                coachSelect.innerHTML = '<option value="">Seleccione un coach</option>';
+    
+                data.records.forEach(record => {
+                    const coachName = record.fields['Coach Solicitante'];
+                    if (coachName) {
+                        const option = document.createElement('option');
+                        option.value = coachName;
+                        option.textContent = coachName;
+                        coachSelect.appendChild(option);
+                    }
+                });
+    
+                alert('Lista de coaches cargada correctamente.');
+            } catch (error) {
+                console.error('Error al cargar los coaches desde Airtable:', error);
+                alert('No se pudieron cargar los coaches. Inténtalo más tarde.');
+            }
+        }
+    
+        // Cargar coaches al cargar la página
+        document.addEventListener('DOMContentLoaded', loadCoaches);
+        async function populateFields() {
+    const coachSelect = document.getElementById('coach');
+    const selectedCoach = coachSelect.value;
+
+    if (!selectedCoach) {
+        clearFields();
+        return;
+    }
+
+    try {
+        const filterFormula = `{Coach Solicitante}="${selectedCoach}"`;
+        const response = await fetch(`${apiUrlBase}/${encodeURIComponent(groupName)}?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+            headers: { Authorization: apiKey }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (!data.records || data.records.length === 0) {
+            alert('No se encontraron datos para el coach seleccionado.');
+            clearFields();
+            return;
+        }
+
+        const record = data.records[0].fields;
+
+        // Asignar los valores recuperados a los campos existentes
+        document.getElementById('country').value = record['País'] || ''; // Campo País actualizado
+        document.getElementById('portal').value = record['Portal'] || '';
+        document.getElementById('password').value = record['Contraseña'] || '';
+        document.getElementById('zoom').value = record['Zoom'] || '';
+        document.getElementById('zoomPassword').value = record['Contraseña Zoom'] || ''; // Campo Contraseña Zoom actualizado
+
+        // Configurar el enlace para la Sala de Emergencia
+        const emergencyRoomLink = document.getElementById('emergencyRoomLink');
+        if (record['Sala de Emergencia']) {
+            emergencyRoomLink.href = record['Sala de Emergencia'];
+            emergencyRoomLink.style.display = 'inline';
+            document.getElementById('emergencyRoom').style.display = 'none';
+        } else {
+            emergencyRoomLink.href = '#';
+            emergencyRoomLink.style.display = 'none';
+            document.getElementById('emergencyRoom').style.display = 'inline';
+        }
+    } catch (error) {
+        console.error('Error al cargar los datos del coach:', error);
+        alert('Error al cargar los datos del coach seleccionado. Inténtalo más tarde.');
+        clearFields();
+    }
+}
+
+function clearFields() {
+    document.getElementById('country').value = ''; // Limpia el campo de País
+    document.getElementById('portal').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('zoom').value = '';
+    document.getElementById('zoomPassword').value = ''; // Limpia el campo Contraseña Zoom
+    document.getElementById('emergencyRoomLink').href = '#';
+    document.getElementById('emergencyRoomLink').style.display = 'none';
+    document.getElementById('emergencyRoom').style.display = 'inline';
+}
+
+    
+    // Vincula la función al cambio de selección en el campo Coach
+    document.getElementById('coach').addEventListener('change', populateFields);
+
+    const timeZones = {
+    "España": 1,
+    "Panamá": -5,
+    "EST": -5,
+    "República Dominicana": -6,
+    "Argentina": -7,
+    "Costa Rica": -4,
+    "Guatemala": -4,
+    "Nicaragua": -6,
+    "Chile": -7,
+    "Ecuador": -5,
+    "Perú": -5
+};
+// Función para eliminar una fila seleccionada de la tabla
+function deleteHour() {
+    const tableBody = document.getElementById('hoursTableBody');
+    const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+    // Verificar si hay filas en la tabla
+    if (rows.length === 0) {
+        alert('No hay horas para eliminar.');
+        return;
+    }
+
+    // Crear un selector dinámico para elegir la hora a eliminar
+    const hourOptions = rows.map((row, index) => {
+        const hourCell = row.cells[0].textContent; // Obtener la celda "Hora"
+        return { text: hourCell, value: index }; // Guardar texto y posición de la fila
+    });
+
+    // Generar un prompt para seleccionar la hora
+    const hourList = hourOptions.map(opt => `${opt.value}: ${opt.text}`).join('\n');
+    const selectedIndex = prompt(`Seleccione el índice de la hora que desea eliminar:\n${hourList}`);
+
+    // Validar la selección del usuario
+    if (selectedIndex === null || selectedIndex.trim() === '') {
+        alert('No se seleccionó ninguna hora.');
+        return;
+    }
+
+    const indexToDelete = parseInt(selectedIndex, 10);
+
+    if (isNaN(indexToDelete) || indexToDelete < 0 || indexToDelete >= rows.length) {
+        alert('Selección inválida.');
+        return;
+    }
+
+    // Eliminar la fila correspondiente
+    rows[indexToDelete].remove();
+
+    alert('Hora eliminada correctamente.');
+}
+
+// Vincular la función al botón "Eliminar Hora"
+document.getElementById('deleteHour').addEventListener('click', deleteHour);
+
+
+// Función para ajustar la hora a cada zona horaria
+function adjustTime(time, baseCountry) {
+    const [hours, minutes] = time.split(':').map(Number);
+    const baseOffset = timeZones[baseCountry];
+    const adjustedTimes = {};
+
+    for (const [country, offset] of Object.entries(timeZones)) {
+        const localTime = new Date();
+        localTime.setUTCHours(hours + baseOffset - offset, minutes);
+        const localHours = String(localTime.getUTCHours()).padStart(2, '0');
+        const localMinutes = String(localTime.getMinutes()).padStart(2, '0');
+        adjustedTimes[country] = `${localHours}:${localMinutes}`;
+    }
+
+    return adjustedTimes;
+}
+// Array para almacenar las horas recientemente agregadas
+const addedRows = [];
+
+// Función para agregar una fila a la tabla y al selector de horas
+
+// Función para agregar una nueva fila a la tabla
+// Función para agregar una nueva fila a la tabla
+
+function addHour() {
+    const date = document.getElementById('date').value;
+    const coach = document.getElementById('coach').value;
+    const country = document.getElementById('country').value;
+    const hours = document.getElementById('hours').value;
+    const duration = document.getElementById('duration').value;
+
+    if (!date || !coach || !country || !hours || !duration) {
+        alert('Por favor, complete todos los campos antes de agregar la hora.');
+        return;
+    }
+
+    // Validar si la fecha seleccionada es caducada
+    const selectedDate = new Date(date);
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0); // Establecer la hora en 0 para comparar solo fechas
+
+    if (selectedDate < currentDate) {
+        alert('No se puede seleccionar una fecha caducada.');
+        return;
+    }
+
+    // Verificar si ya existe la combinación de Coach Solicitante, Hora y Fecha en la tabla
+    const tableBody = document.getElementById('hoursTableBody');
+    const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+    const isDuplicate = rows.some(row => {
+        const existingHour = row.cells[0]?.textContent; // Hora en la primera columna
+        const existingCoach = row.cells[2]?.querySelector('select')?.value || 'No Reemplazado'; // Coach en la tercera columna
+        const existingDate = row.cells[row.cells.length - 1]?.textContent; // Fecha en la última columna
+        return existingHour === hours && existingCoach === coach && existingDate === date;
+    });
+
+    if (isDuplicate) {
+        alert('Ya existe una entrada con el mismo Coach Solicitante, Hora y Fecha.');
+        return;
+    }
+
+    // Si no hay duplicados, agregar la nueva fila
+    const adjustedTimes = adjustTime(hours, country);
+
+    const newRow = document.createElement('tr');
+
+    // Crear la lista desplegable para "Coach de Reemplazo"
+    const replacementCoachCell = document.createElement('td');
+    const coachSelect = document.createElement('select');
+    coachSelect.classList.add('coachSelect');
+    coachSelect.innerHTML = `<option value="Otro">Coach de reemplazo</option>`;
+    document.querySelectorAll('#coach option').forEach(option => {
+        if (option.value) {
+            const newOption = document.createElement('option');
+            newOption.value = option.value;
+            newOption.textContent = option.textContent;
+            coachSelect.appendChild(newOption);
+        }
+    });
+
+    // Campo para ingresar un nuevo nombre si se selecciona "Otro"
+    const newCoachInput = document.createElement('input');
+    newCoachInput.type = 'text';
+    newCoachInput.placeholder = 'Ingrese un nombre';
+    newCoachInput.style.display = 'none';
+    replacementCoachCell.appendChild(coachSelect);
+    replacementCoachCell.appendChild(newCoachInput);
+
+    // Cambiar la visibilidad del campo "Nuevo Coach"
+    coachSelect.addEventListener('change', () => {
+        if (coachSelect.value === 'Otro') {
+            newCoachInput.style.display = 'inline';
+            newCoachInput.focus();
+        } else {
+            newCoachInput.style.display = 'none';
+            newCoachInput.value = '';
+        }
+    });
+
+    newCoachInput.addEventListener('blur', () => {
+        if (newCoachInput.value.trim() !== '') {
+            const newOption = document.createElement('option');
+            newOption.value = newCoachInput.value.trim();
+            newOption.textContent = newCoachInput.value.trim();
+            coachSelect.appendChild(newOption);
+            coachSelect.value = newCoachInput.value.trim();
+            newCoachInput.style.display = 'none';
+        }
+    });
+
+    // Crear la lista desplegable para "Tipo de Reemplazo"
+    const replacementTypeCell = document.createElement('td');
+    const typeSelect = document.createElement('select');
+    typeSelect.innerHTML = `
+        <option value="Interno">Interno</option>
+        <option value="Externo">Externo</option>
+    `;
+    replacementTypeCell.appendChild(typeSelect);
+
+    // Actualizar el tipo de reemplazo según la selección
+    newCoachInput.addEventListener('input', () => {
+        typeSelect.value = 'Externo';
+    });
+    coachSelect.addEventListener('change', () => {
+        if (coachSelect.value !== 'Otro') {
+            typeSelect.value = 'Interno';
+        }
+    });
+
+    // Insertar las celdas en la fila
+    newRow.innerHTML = `
+        <td>${hours}</td>
+        <td>${duration} minutos</td>
+    `;
+    newRow.appendChild(replacementCoachCell);
+    newRow.appendChild(replacementTypeCell);
+
+    // Insertar las horas ajustadas para cada país
+    for (const [country, time] of Object.entries(adjustedTimes)) {
+        const cell = document.createElement('td');
+        cell.textContent = time;
+        newRow.appendChild(cell);
+    }
+
+    // Agregar la fecha seleccionada
+    const dateCell = document.createElement('td');
+    dateCell.textContent = date;
+    newRow.appendChild(dateCell);
+
+    tableBody.appendChild(newRow);
+
+    // Limpiar los campos después de agregar la hora document.getElementById('date').value = '';
+//document.getElementById('date').value = '';
+//document.getElementById('coach').value = '';
+//document.getElementById('country').value = '';
+document.getElementById('hours').value = '';
+document.getElementById('duration').value = '';
+//document.getElementById('note').value = '';
+}
+
+
+// Vincular la función al botón "Agregar Hora"
+document.getElementById('addHour').addEventListener('click', addHour);
+
+// Función para guardar los datos en Airtable
+async function saveDataToAirtable() {
+    const tableBody = document.getElementById('hoursTableBody');
+    const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+    if (rows.length === 0) {
+        alert('No hay datos para guardar.');
+        return;
+    }
+
+    const dataToSave = rows.map(row => {
+        const cells = row.querySelectorAll('td');
+
+        const coachSolicitante = document.getElementById('coach').value || 'Sin Coach';
+        const country = document.getElementById('country').value || 'Sin País';
+        const duration = cells[1]?.textContent || 'N/A';
+        const coachReemplazo = cells[2]?.querySelector('select')?.value || 'No Reemplazado';
+        const tipoReemplazo = cells[3]?.querySelector('select')?.value || 'Nulo';
+        const fecha = cells[cells.length - 1]?.textContent || 'Sin Fecha'; // Extraer la fecha de la última celda de la fila
+
+        // Crear un objeto con los datos a guardar
+        const record = {
+            fields: {
+                "Coach Solicitante": coachSolicitante,
+                "País": country,
+                "Duración": duration,
+                "Coach de Reemplazo": coachReemplazo,
+                "Tipo de Reemplazo": tipoReemplazo,
+                "Fecha": fecha
+            }
+        };
+
+        // Agregar las horas ajustadas a cada país
+        const hourColumns = Array.from(cells).slice(4, cells.length - 1); // Desde la columna 4 hasta la penúltima columna (excluyendo Fecha)
+        hourColumns.forEach((cell, index) => {
+            const countryName = document.querySelectorAll('thead th')[index + 4].textContent;
+            record.fields[`Hora ${countryName}`] = cell.textContent || 'N/A';
+        });
+
+        return record;
+    });
+
+    try {
+        const response = await fetch(`${apiUrlBase}/Reemplazos`, {
+            method: 'POST',
+            headers: {
+                Authorization: apiKey,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ records: dataToSave })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        alert('Datos guardados correctamente en Airtable.');
+
+        // Limpiar el contenido de la tabla después de guardar los datos
+        tableBody.innerHTML = '';
+    } catch (error) {
+        console.error('Error al guardar los datos en Airtable:', error);
+        alert('No se pudieron guardar los datos. Inténtalo más tarde.');
+    }
+}
+
+// Vincular la función al botón Guardar
+document.getElementById('saveData').addEventListener('click', saveDataToAirtable);
+
+async function fetchDataByName(name) {
+    try {
+        const tableBody = document.getElementById('hoursTableBody');
+        tableBody.innerHTML = ''; // Limpiar la tabla
+
+        // Obtener los reemplazos del nombre seleccionado
+        const filterFormula = `SEARCH("${name}", {Coach Solicitante})`;
+        const response = await fetch(`${apiUrlBase}/Reemplazos?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+            headers: { Authorization: apiKey }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        data.records.forEach(record => {
+            const row = document.createElement('tr');
+            const fields = record.fields;
+
+            // Asignar el ID del registro como atributo data-id
+            row.setAttribute('data-id', record.id);
+
+            // Crear la celda de "Coach de Reemplazo" con lista desplegable
+            const replacementCoachCell = document.createElement('td');
+            const coachSelect = document.createElement('select');
+            coachSelect.classList.add('coachSelect');
+            coachSelect.innerHTML = `<option value="Reemplazar">Reemplazar</option>`;
+            document.querySelectorAll('#coach option').forEach(option => {
+                if (option.value) {
+                    const newOption = document.createElement('option');
+                    newOption.value = option.value;
+                    newOption.textContent = option.textContent;
+                    coachSelect.appendChild(newOption);
+                }
+            });
+            coachSelect.value = fields["Coach de Reemplazo"] || "Reemplazar";
+
+            // Campo para ingresar un nuevo nombre si se selecciona "Otro"
+            const newCoachInput = document.createElement('input');
+            newCoachInput.type = 'text';
+            newCoachInput.placeholder = 'Ingrese un nombre';
+            newCoachInput.style.display = 'none';
+            replacementCoachCell.appendChild(coachSelect);
+            replacementCoachCell.appendChild(newCoachInput);
+
+            // Cambiar la visibilidad del campo "Nuevo Coach"
+            coachSelect.addEventListener('change', () => {
+                if (coachSelect.value === 'Otro') {
+                    newCoachInput.style.display = 'inline';
+                    newCoachInput.focus();
+                } else {
+                    newCoachInput.style.display = 'none';
+                    newCoachInput.value = '';
+                }
+            });
+
+            // Agregar nuevo nombre a la lista desplegable
+            newCoachInput.addEventListener('blur', () => {
+                if (newCoachInput.value.trim() !== '') {
+                    const newOption = document.createElement('option');
+                    newOption.value = newCoachInput.value.trim();
+                    newOption.textContent = newCoachInput.value.trim();
+                    coachSelect.appendChild(newOption);
+                    coachSelect.value = newCoachInput.value.trim();
+                    newCoachInput.style.display = 'none';
+                }
+            });
+
+            // Crear la celda de "Tipo de Reemplazo" con lista desplegable
+            const replacementTypeCell = document.createElement('td');
+            const typeSelect = document.createElement('select');
+            typeSelect.innerHTML = `
+                <option value="Interno">Interno</option>
+                <option value="Externo">Externo</option>
+            `;
+            typeSelect.value = fields["Tipo de Reemplazo"] || "Interno";
+            replacementTypeCell.appendChild(typeSelect);
+
+            // Insertar las celdas en la fila
+            row.innerHTML = `
+                <td>${fields["Hora"] || "N/A"}</td>
+                <td>${fields["Duración"] || "N/A"}</td>
+            `;
+            row.appendChild(replacementCoachCell);
+            row.appendChild(replacementTypeCell);
+
+            // Insertar las horas ajustadas para cada país
+            const countryColumns = ["España", "Panamá", "EST", "República Dominicana", "Argentina", "Costa Rica", "Guatemala", "Nicaragua", "Chile", "Ecuador", "Perú"];
+            countryColumns.forEach(country => {
+                const cell = document.createElement('td');
+                cell.textContent = fields[`Hora ${country}`] || "N/A";
+                row.appendChild(cell);
+            });
+
+            // Agregar la celda de Fecha
+            const dateCell = document.createElement('td');
+            dateCell.textContent = fields["Fecha"] || "N/A";
+            row.appendChild(dateCell);
+
+            tableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Error al traer datos por nombre:', error);
+        alert('No se pudieron cargar los datos. Inténtalo más tarde.');
+    }
+}
+
+document.getElementById('nameSelect').addEventListener('change', (event) => {
+    const selectedName = event.target.value;
+    if (selectedName) {
+        fetchDataByName(selectedName);
+    } else {
+        document.getElementById('hoursTableBody').innerHTML = ''; // Limpiar la tabla si no se selecciona un nombre
+    }
+});
+async function replaceData() {
+    const tableBody = document.getElementById('hoursTableBody');
+    const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+    if (rows.length === 0) {
+        alert('No hay datos en la tabla para reemplazar.');
+        return;
+    }
+
+    try {
+        const updates = []; // Array para almacenar los datos a actualizar
+
+        for (const row of rows) {
+            const cells = row.querySelectorAll('td');
+            const recordId = row.getAttribute('data-id'); // Obtener el ID del registro en Airtable
+
+            if (!recordId) {
+                console.warn('No se encontró un ID de registro en la fila. Saltando...');
+                continue; // Saltar filas sin ID
+            }
+
+            const coachReemplazoCell = cells[2]?.querySelector('select');
+            const coachReemplazo = coachReemplazoCell?.value || '';
+            const existingCoachReemplazo = row.getAttribute('data-existing-coach-reemplazo'); // Valor actual
+
+            if (
+                existingCoachReemplazo &&
+                existingCoachReemplazo !== "Otro" &&
+                existingCoachReemplazo !== "" &&
+                existingCoachReemplazo !== coachReemplazo
+            ) {
+                // Solicitar contraseña antes de realizar el cambio
+                const password = prompt('Ingrese la contraseña para realizar el reemplazo:');
+
+                if (!password) {
+                    alert('Debe ingresar una contraseña para continuar.');
+                    return;
+                }
+
+                // Validar la contraseña en la tabla "Grupos"
+                const groupResponse = await fetch(`${apiUrlBase}/Grupos`, {
+                    headers: { Authorization: apiKey },
+                });
+
+                if (!groupResponse.ok) {
+                    throw new Error(`Error HTTP: ${groupResponse.status}`);
+                }
+
+                const gruposData = await groupResponse.json();
+
+                // Verificar si la contraseña coincide con la columna "Pass Reemplazos"
+                const validGroup = gruposData.records.find(
+                    (record) => record.fields['Pass Reemplazos'] === password
+                );
+
+                if (!validGroup) {
+                    alert('Contraseña incorrecta. No se puede realizar el reemplazo.');
+                    return;
+                }
+            }
+
+            // Crear los datos de actualización para este registro
+            const tipoReemplazoCell = cells[3]?.querySelector('select');
+            const tipoReemplazo = tipoReemplazoCell?.value || 'Interno';
+            const fecha = cells[cells.length - 1]?.textContent || 'Sin Fecha';
+
+            const updateData = {
+                id: recordId,
+                fields: {
+                    "Coach de Reemplazo": coachReemplazo,
+                    "Tipo de Reemplazo": tipoReemplazo,
+                    "Fecha": fecha,
+                },
+            };
+
+            updates.push(updateData); // Agregar al array de actualizaciones
+        }
+
+        if (updates.length === 0) {
+            alert('No se encontraron registros válidos para actualizar.');
+            return;
+        }
+
+        // Enviar las actualizaciones a Airtable
+        const response = await fetch(`${apiUrlBase}/Reemplazos`, {
+            method: 'PATCH',
+            headers: {
+                Authorization: apiKey,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ records: updates }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        alert('Datos actualizados correctamente en la tabla Reemplazos en Airtable.');
+    } catch (error) {
+        console.error('Error al reemplazar datos en Airtable:', error);
+        alert('No se pudieron reemplazar los datos. Inténtalo más tarde.');
+    }
+}
+
+// Vincular la función al botón "Reemplazar"
+document.getElementById('replaceData').addEventListener('click', replaceData);
+
+function redirectToIndex() {
+    window.location.href = "index.html";
+}
+
+
+</script>
+    </script>
+    
+</body>
+</html>

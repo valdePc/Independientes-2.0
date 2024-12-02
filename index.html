@@ -10,7 +10,7 @@
             margin: 0;
             padding: 0;
             background: linear-gradient(to right, #00c6ff, #00a9b5);
-            color:black;
+            color: black;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -105,10 +105,7 @@
         <div class="form-group">
             <label for="group">Selecciona tu grupo:</label>
             <select id="group">
-                <option value="Selecciona tu grupo">Selecciona tu grupo</option>
-                <option value="Independientes 1.0">Independientes 1.0</option>
-                <option value="Independientes 2.0">Independientes 2.0</option>
-                <!-- Puedes agregar más opciones de grupos aquí -->
+                <option value="default">Selecciona tu grupo</option>
             </select>
         </div>
         <div class="form-group">
@@ -122,31 +119,97 @@
     </div>
 
     <script>
+        const apiUrl = 'https://api.airtable.com/v0/appVuMTXFU8YHrGND/Grupos';
+        const apiKey = 'Bearer pat9wBOS3cEULZjbM.46a19c678b7b3a403febb212e0ec73de16f408d4193bf476a5d7348c23be39b1';
+
+        // Carga los grupos desde Airtable
+        async function loadGroups() {
+    try {
+        const response = await fetch(apiUrl, {
+            headers: {
+                Authorization: apiKey
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        const { records } = await response.json();
+        const groupSelect = document.getElementById('group');
+
+        // Verifica que haya registros
+        if (records.length === 0) {
+            alert('No hay grupos disponibles en este momento.');
+            return;
+        }
+
+        // Agrega cada grupo al dropdown
+        records.forEach(record => {
+            const groupName = record.fields['Nombre de grupos'];
+            const groupPassword = record.fields['Contraseña de grupos'];
+
+            // Validar que el registro esté completo
+            if (!groupName || !groupPassword) {
+                console.warn(`Registro incompleto: ${JSON.stringify(record.fields)}`);
+                return;
+            }
+
+            const option = document.createElement('option');
+            option.value = groupName;
+            option.dataset.password = groupPassword;
+            option.textContent = groupName;
+            groupSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error al cargar los grupos desde Airtable:', error);
+        alert('No se pudieron cargar los grupos. Inténtalo más tarde.');
+    }
+}
+
+        document.addEventListener('DOMContentLoaded', loadGroups);
+
+        // Muestra/oculta la contraseña
         function togglePassword() {
             const passwordField = document.getElementById('password');
             const toggleIcon = document.querySelector('.toggle-password');
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
-                toggleIcon.textContent = '🙈'; // Cambia el icono al hacer clic
+                toggleIcon.textContent = '🙈';
             } else {
                 passwordField.type = 'password';
-                toggleIcon.textContent = '👁️'; // Cambia el icono al hacer clic
+                toggleIcon.textContent = '👁️';
             }
         }
+function accessGroup() {
+    const groupSelect = document.getElementById('group');
+    const selectedOption = groupSelect.options[groupSelect.selectedIndex];
+    const groupPassword = selectedOption.dataset.password;
+    const enteredPassword = document.getElementById('password').value;
 
-        function accessGroup() {
-            const group = document.getElementById('group').value;
-            const password = document.getElementById('password').value;
+    // Verifica si seleccionaron un grupo
+    if (selectedOption.value === "default") {
+        alert("Por favor, selecciona un grupo.");
+        return;
+    }
 
-            // Verificación de la contraseña para cada grupo
-            if (group === 'Independientes 1.0' && password === 'Indepe1!0') {
-                window.location.href = 'Ginde1.html'; // Redirige a Gind1.html
-            } else if (group === 'Independientes 2.0' && password === 'Ind2.0') {
-                window.location.href = 'Ginde2.html'; // Redirige a Ginde2.html
-            } else {
-                alert('Contraseña incorrecta. Por favor, intenta nuevamente.');
-            }
-        }
+    // Verifica si el grupo tiene contraseña
+    if (!groupPassword) {
+        alert("Este grupo no tiene una contraseña asignada. Contacta al administrador.");
+        return;
+    }
+
+    // Verifica la contraseña ingresada
+    if (enteredPassword === groupPassword) {
+        sessionStorage.setItem('groupName', selectedOption.value);
+        alert('Acceso permitido. Redirigiendo...');
+        window.location.href = 'Reemplazos.html';
+    } else {
+        alert('Contraseña incorrecta. Por favor, intenta nuevamente.');
+    }
+}
+
+       
     </script>
 </body>
 </html>
