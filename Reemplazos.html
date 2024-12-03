@@ -343,9 +343,6 @@
         console.error('Error al cargar nombres únicos:', error);
     }
 }
-
-// Llenar los datos de la tabla y los campos adicionales al seleccionar un nombre
-// Llenar los datos de la tabla y los campos adicionales al seleccionar un nombre
 async function fetchDataByName(name) {
     try {
         const tableBody = document.getElementById('hoursTableBody');
@@ -374,9 +371,26 @@ async function fetchDataByName(name) {
             const replacementCoachCell = document.createElement('td');
             const coachSelect = document.createElement('select');
             coachSelect.classList.add('coachSelect');
-            coachSelect.innerHTML = `<option value="Otro">Reemplazar</option>`;
+
+            // Añadir la opción "Reemplazar" como una opción disponible
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Reemplazar';
+            coachSelect.appendChild(defaultOption);
+
+            // Verificar si "Coach de Reemplazo" está vacío y mantenerlo vacío si es necesario
+            const coachReemplazo = fields["Coach de Reemplazo"] || ""; // Mantener vacío si no hay valor
+            if (coachReemplazo !== "") {
+                const selectedOption = document.createElement('option');
+                selectedOption.value = coachReemplazo;
+                selectedOption.textContent = coachReemplazo;
+                selectedOption.selected = true; // Seleccionar el valor si existe
+                coachSelect.appendChild(selectedOption);
+            }
+
+            // Añadir opciones dinámicas al select
             document.querySelectorAll('#coach option').forEach(option => {
-                if (option.value) {
+                if (option.value && option.value !== coachReemplazo) {
                     const newOption = document.createElement('option');
                     newOption.value = option.value;
                     newOption.textContent = option.textContent;
@@ -451,6 +465,13 @@ async function fetchDataByName(name) {
         console.error('Error al traer datos por nombre:', error);
     }
 }
+
+
+
+
+// Cargar nombres únicos al inicializar la página
+document.addEventListener('DOMContentLoaded', loadUniqueNames);
+
 
 
 
@@ -703,13 +724,13 @@ function addHour() {
 
     const isDuplicate = rows.some(row => {
         const existingHour = row.cells[0]?.textContent; // Hora en la primera columna
-        const existingCoach = row.cells[2]?.querySelector('select')?.value || 'No Reemplazado'; // Coach en la tercera columna
+        const existingCoachSolicitante = row.getAttribute('data-coach-solicitante'); // Coach solicitante guardado
         const existingDate = row.cells[row.cells.length - 1]?.textContent; // Fecha en la última columna
-        return existingHour === hours && existingCoach === coach && existingDate === date;
+        return existingHour === hours && existingCoachSolicitante === coach && existingDate === date;
     });
 
     if (isDuplicate) {
-        alert('Ya existe una entrada con el mismo Coach Solicitante, Hora y Fecha.');
+        alert('Ya este reemplazo se encuenta.');
         return;
     }
 
@@ -717,12 +738,13 @@ function addHour() {
     const adjustedTimes = adjustTime(hours, country);
 
     const newRow = document.createElement('tr');
+    newRow.setAttribute('data-coach-solicitante', coach); // Guardar el Coach Solicitante como atributo
 
     // Crear la lista desplegable para "Coach de Reemplazo"
     const replacementCoachCell = document.createElement('td');
     const coachSelect = document.createElement('select');
     coachSelect.classList.add('coachSelect');
-    coachSelect.innerHTML = `<option value="Otro">Coach de reemplazo</option>`;
+    coachSelect.innerHTML = `<option value="Reemplazar">Coach de reemplazo</option>`;
     document.querySelectorAll('#coach option').forEach(option => {
         if (option.value) {
             const newOption = document.createElement('option');
@@ -803,19 +825,13 @@ function addHour() {
 
     tableBody.appendChild(newRow);
 
-    // Limpiar los campos después de agregar la hora document.getElementById('date').value = '';
-//document.getElementById('date').value = '';
-//document.getElementById('coach').value = '';
-//document.getElementById('country').value = '';
-document.getElementById('hours').value = '';
-document.getElementById('duration').value = '';
-//document.getElementById('note').value = '';
+    // Limpiar los campos después de agregar la hora
+    document.getElementById('hours').value = '';
+    document.getElementById('duration').value = '';
 }
-
 
 // Vincular la función al botón "Agregar Hora"
 document.getElementById('addHour').addEventListener('click', addHour);
-
 // Función para guardar los datos en Airtable
 async function saveDataToAirtable() {
     const tableBody = document.getElementById('hoursTableBody');
@@ -826,46 +842,84 @@ async function saveDataToAirtable() {
         return;
     }
 
-    const dataToSave = rows.map(row => {
-        const cells = row.querySelectorAll('td');
-
-        const coachSolicitante = document.getElementById('coach').value || 'Sin Coach';
-        const country = document.getElementById('country').value || 'Sin País';
-        const duration = cells[1]?.textContent || 'N/A';
-        const coachReemplazo = cells[2]?.querySelector('select')?.value || 'No Reemplazado';
-        const tipoReemplazo = cells[3]?.querySelector('select')?.value || 'Nulo';
-        const fecha = cells[cells.length - 1]?.textContent || 'Sin Fecha'; // Extraer la fecha de la última celda de la fila
-
-        // Crear un objeto con los datos a guardar
-        const record = {
-            fields: {
-                "Coach Solicitante": coachSolicitante,
-                "País": country,
-                "Duración": duration,
-                "Coach de Reemplazo": coachReemplazo,
-                "Tipo de Reemplazo": tipoReemplazo,
-                "Fecha": fecha
+    try {
+        // Paso 1: Obtener todos los registros existentes en Airtable
+        const existingRecordsResponse = await fetch(`${apiUrlBase}/Reemplazos`, {
+            method: 'GET',
+            headers: {
+                Authorization: apiKey,
             }
-        };
-
-        // Agregar las horas ajustadas a cada país
-        const hourColumns = Array.from(cells).slice(4, cells.length - 1); // Desde la columna 4 hasta la penúltima columna (excluyendo Fecha)
-        hourColumns.forEach((cell, index) => {
-            const countryName = document.querySelectorAll('thead th')[index + 4].textContent;
-            record.fields[`Hora ${countryName}`] = cell.textContent || 'N/A';
         });
 
-        return record;
-    });
+        if (!existingRecordsResponse.ok) {
+            throw new Error(`Error HTTP al obtener registros: ${existingRecordsResponse.status}`);
+        }
 
-    try {
+        const existingRecordsData = await existingRecordsResponse.json();
+        const existingRecords = existingRecordsData.records;
+
+        // Paso 2: Preparar los datos para guardar
+        const dataToSave = rows.map(row => {
+            const cells = row.querySelectorAll('td');
+
+            const coachSolicitante = document.getElementById('coach').value || 'Sin Coach';
+            const country = document.getElementById('country').value || 'Sin País';
+            const duration = cells[1]?.textContent || 'N/A';
+
+            // Ajustar el valor del campo "Coach de Reemplazo"
+            let coachReemplazo = cells[2]?.querySelector('select')?.value || 'Reemplazar';
+            if (coachReemplazo === 'Reemplazar') {
+                coachReemplazo = ''; // Enviar vacío a Airtable
+            }
+
+            const tipoReemplazo = cells[3]?.querySelector('select')?.value || 'Nulo';
+            const fecha = cells[cells.length - 1]?.textContent || 'Sin Fecha';
+
+            const record = {
+                fields: {
+                    "Coach Solicitante": coachSolicitante,
+                    "País": country,
+                    "Duración": duration,
+                    "Coach de Reemplazo": coachReemplazo,
+                    "Tipo de Reemplazo": tipoReemplazo,
+                    "Fecha": fecha
+                }
+            };
+
+            // Agregar las horas ajustadas a cada país
+            const hourColumns = Array.from(cells).slice(4, cells.length - 1);
+            hourColumns.forEach((cell, index) => {
+                const countryName = document.querySelectorAll('thead th')[index + 4].textContent;
+                record.fields[`Hora ${countryName}`] = cell.textContent || 'N/A';
+            });
+
+            return record;
+        });
+
+        // Paso 3: Filtrar datos duplicados
+        const uniqueData = dataToSave.filter(newRecord => {
+            return !existingRecords.some(existingRecord => {
+                const fields = existingRecord.fields;
+                return fields["Coach Solicitante"] === newRecord.fields["Coach Solicitante"] &&
+                    fields["País"] === newRecord.fields["País"] &&
+                    fields["Fecha"] === newRecord.fields["Fecha"] &&
+                    fields["Duración"] === newRecord.fields["Duración"];
+            });
+        });
+
+        if (uniqueData.length === 0) {
+            alert('No hay datos nuevos para guardar / no se permiten duplicados.');
+            return;
+        }
+
+        // Paso 4: Guardar los datos únicos en Airtable
         const response = await fetch(`${apiUrlBase}/Reemplazos`, {
             method: 'POST',
             headers: {
                 Authorization: apiKey,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ records: dataToSave })
+            body: JSON.stringify({ records: uniqueData })
         });
 
         if (!response.ok) {
@@ -874,7 +928,7 @@ async function saveDataToAirtable() {
 
         alert('Datos guardados correctamente en Airtable.');
 
-        // Limpiar el contenido de la tabla después de guardar los datos
+        // Limpiar la tabla después de guardar
         tableBody.innerHTML = '';
     } catch (error) {
         console.error('Error al guardar los datos en Airtable:', error);
@@ -884,6 +938,7 @@ async function saveDataToAirtable() {
 
 // Vincular la función al botón Guardar
 document.getElementById('saveData').addEventListener('click', saveDataToAirtable);
+
 
 async function fetchDataByName(name) {
     try {
@@ -1024,42 +1079,55 @@ async function replaceData() {
             }
 
             const coachReemplazoCell = cells[2]?.querySelector('select');
-            const coachReemplazo = coachReemplazoCell?.value || '';
-            const existingCoachReemplazo = row.getAttribute('data-existing-coach-reemplazo'); // Valor actual
+            let coachReemplazo = coachReemplazoCell?.value || ''; // Nuevo valor del coach de reemplazo
 
-            if (
-                existingCoachReemplazo &&
-                existingCoachReemplazo !== "Otro" &&
-                existingCoachReemplazo !== "" &&
-                existingCoachReemplazo !== coachReemplazo
-            ) {
-                // Solicitar contraseña antes de realizar el cambio
-                const password = prompt('Ingrese la contraseña para realizar el reemplazo:');
+            // Si el valor es "Reemplazar", asignar vacío
+            if (coachReemplazo === 'Reemplazar') {
+                coachReemplazo = ''; // Guardar como vacío en Airtable
+            }
 
-                if (!password) {
-                    alert('Debe ingresar una contraseña para continuar.');
-                    return;
-                }
+            // Verificar el estado actual en Airtable
+            const recordResponse = await fetch(`${apiUrlBase}/Reemplazos/${recordId}`, {
+                headers: { Authorization: apiKey },
+            });
 
-                // Validar la contraseña en la tabla "Grupos"
-                const groupResponse = await fetch(`${apiUrlBase}/Grupos`, {
-                    headers: { Authorization: apiKey },
-                });
+            if (!recordResponse.ok) {
+                throw new Error(`Error al obtener el registro: ${recordResponse.status}`);
+            }
 
-                if (!groupResponse.ok) {
-                    throw new Error(`Error HTTP: ${groupResponse.status}`);
-                }
+            const recordData = await recordResponse.json();
+            const existingCoachReemplazo = recordData.fields['Coach de Reemplazo'] || ''; // Valor actual en Airtable
 
-                const gruposData = await groupResponse.json();
+            if (existingCoachReemplazo) {
+                // Si ya existe un nombre asignado, solicitar contraseña para cambiarlo
+                if (existingCoachReemplazo !== coachReemplazo) {
+                    const password = prompt('Ingrese la contraseña para realizar el reemplazo:');
 
-                // Verificar si la contraseña coincide con la columna "Pass Reemplazos"
-                const validGroup = gruposData.records.find(
-                    (record) => record.fields['Pass Reemplazos'] === password
-                );
+                    if (!password) {
+                        alert('Debe ingresar una contraseña para continuar.');
+                        continue; // Saltar esta fila
+                    }
 
-                if (!validGroup) {
-                    alert('Contraseña incorrecta. No se puede realizar el reemplazo.');
-                    return;
+                    // Validar la contraseña en la tabla "Grupos"
+                    const groupResponse = await fetch(`${apiUrlBase}/Grupos`, {
+                        headers: { Authorization: apiKey },
+                    });
+
+                    if (!groupResponse.ok) {
+                        throw new Error(`Error HTTP: ${groupResponse.status}`);
+                    }
+
+                    const gruposData = await groupResponse.json();
+
+                    // Verificar si la contraseña coincide con la columna "Pass Reemplazos"
+                    const validGroup = gruposData.records.find(
+                        (record) => record.fields['Pass Reemplazos'] === password
+                    );
+
+                    if (!validGroup) {
+                        alert('Contraseña incorrecta. No se puede realizar el reemplazo.');
+                        continue; // Saltar esta fila
+                    }
                 }
             }
 
@@ -1071,7 +1139,7 @@ async function replaceData() {
             const updateData = {
                 id: recordId,
                 fields: {
-                    "Coach de Reemplazo": coachReemplazo,
+                    "Coach de Reemplazo": coachReemplazo, // Guardar vacío si corresponde
                     "Tipo de Reemplazo": tipoReemplazo,
                     "Fecha": fecha,
                 },
@@ -1087,7 +1155,7 @@ async function replaceData() {
 
         // Enviar las actualizaciones a Airtable
         const response = await fetch(`${apiUrlBase}/Reemplazos`, {
-            method: 'PATCH',
+            method: 'PATCH', // Usar PATCH para actualizar registros
             headers: {
                 Authorization: apiKey,
                 'Content-Type': 'application/json',
@@ -1099,22 +1167,58 @@ async function replaceData() {
             throw new Error(`Error HTTP: ${response.status}`);
         }
 
-        alert('Datos actualizados correctamente en la tabla Reemplazos en Airtable.');
+        alert('Datos actualizados correctamente en Airtable.');
     } catch (error) {
-        console.error('Error al reemplazar datos en Airtable:', error);
-        alert('No se pudieron reemplazar los datos. Inténtalo más tarde.');
+        console.error('Error al reemplazar los datos:', error);
+        alert('No se pudieron actualizar los datos. Inténtalo más tarde.');
     }
 }
 
 // Vincular la función al botón "Reemplazar"
 document.getElementById('replaceData').addEventListener('click', replaceData);
 
-function redirectToIndex() {
-    window.location.href = "index.html";
+
+
+async function updateRowData(row, recordId) {
+    const cells = row.querySelectorAll('td');
+    const coachReemplazoCell = cells[2]?.querySelector('select');
+    const tipoReemplazoCell = cells[3]?.querySelector('select');
+
+    const coachReemplazo = coachReemplazoCell?.value || '';
+    const tipoReemplazo = tipoReemplazoCell?.value || 'Interno';  // Valor por defecto si no se selecciona
+
+    const updateData = {
+        fields: {
+            'Coach de Reemplazo': coachReemplazo,
+            'Tipo de Reemplazo': tipoReemplazo,
+            // Asegúrate de agregar cualquier otro campo que necesites actualizar
+        }
+    };
+
+    try {
+        const response = await fetch(`${apiUrlBase}/Grupos/${recordId}`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updateData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error al actualizar el registro: ${response.status}`);
+        }
+
+        const updatedRecord = await response.json();
+        console.log('Registro actualizado exitosamente:', updatedRecord);
+        alert('La actualización fue exitosa.');
+
+    } catch (error) {
+        console.error('Error al actualizar:', error);
+        alert('Hubo un error al actualizar el registro.');
+    }
 }
 
-
-</script>
     </script>
     
 </body>
