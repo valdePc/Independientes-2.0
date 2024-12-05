@@ -1,0 +1,54 @@
+document.addEventListener('DOMContentLoaded', loadUniqueNames);
+async function populateFields() {
+const nameSelect = document.getElementById('name');
+const selectedName = nameSelect.value;
+
+if (!selectedName) {
+clearFields();
+return;
+}
+
+try {
+const filterFormula = `Seleccione un nombre="${selectedName}"`;
+const response = await fetch(`${apiUrlBase}/${encodeURIComponent(groupName)}?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+    headers: { Authorization: apiKey }
+});
+
+if (!response.ok) {
+    throw new Error(`Error HTTP: ${response.status}`);
+}
+
+const data = await response.json();
+
+if (!data.records || data.records.length === 0) {
+    alert('No se encontraron datos para el nombre seleccionado.');
+    clearFields();
+    return;
+}
+
+const record = data.records[0].fields;
+
+// Asignar los valores recuperados a los campos existentes
+document.getElementById('country').value = record['País'] || ''; // Campo País actualizado
+document.getElementById('portal').value = record['Portal'] || '';
+document.getElementById('password').value = record['Contraseña'] || '';
+document.getElementById('zoom').value = record['Zoom'] || '';
+document.getElementById('zoomPassword').value = record['Contraseña Zoom'] || ''; // Campo Contraseña Zoom actualizado
+
+// Configurar el enlace para la Sala de Emergencia
+const emergencyRoomLink = document.getElementById('emergencyRoomLink');
+if (record['Sala de Emergencia']) {
+    emergencyRoomLink.href = record['Sala de Emergencia'];
+    emergencyRoomLink.style.display = 'inline';
+    document.getElementById('emergencyRoom').style.display = 'none';
+} else {
+    emergencyRoomLink.href = '#';
+    emergencyRoomLink.style.display = 'none';
+    document.getElementById('emergencyRoom').style.display = 'inline';
+}
+} catch (error) {
+console.error('Error al cargar los datos del nombre:', error);
+alert('Error al cargar los datos del coach seleccionado. Inténtalo más tarde.');
+clearFields();
+}
+}

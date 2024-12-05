@@ -176,6 +176,7 @@
             <h1>Reemplazos</h1>
         </div>
         <form id="replacementForm">
+            
             <!-- Primera fila: Fecha, Coach Solicitante y País -->
             <div class="form-group" style="display: flex; gap: 10px;">
                 <div style="flex: 1;">
@@ -186,8 +187,9 @@
                     <label for="coach">Coach Solicitante:</label>
                     <select id="coach">
                         <option value="">Seleccione un coach</option>
-                    </select>
+                    </select>    
                 </div>
+
                 <div style="flex: 1;">
                     <label for="country">País:</label>
                     <select id="country">
@@ -242,13 +244,6 @@
                 <a id="emergencyRoomLink" href="#" target="_blank" style="display:none;">Sala de Emergencia</a>
                 <input type="text" id="emergencyRoom" placeholder="Sala de Emergencia" readonly style="display:inline;">
             </div>
-            <div class="form-group" style="margin-top: 20px;">
-                <label for="deleteHourSelect">Seleccione la hora a eliminar:</label>
-                <select id="deleteHourSelect">
-                    <option value="">Seleccione una hora</option>
-                </select>
-              
-            </div>
             
             <div class="form-group" style="margin-top: 20px;">
                 <label for="nameSelect">Seleccione un nombre:</label>
@@ -291,8 +286,9 @@
         </div>
            
     </div>
-    <button id="bddButton" class="floating-button">BDD</button>
+    <button id="bddButton" class="floating-button" onclick="redirectToAirtable()">BDD</button>
     <button id="exitButton" class="floating-button" onclick="redirectToIndex()">Salir</button>
+    
 
     <script>
         const apiUrlBase = 'https://api.airtable.com/v0/appVuMTXFU8YHrGND';
@@ -343,6 +339,152 @@
         console.error('Error al cargar nombres únicos:', error);
     }
 }
+document.addEventListener('DOMContentLoaded', loadUniqueNames);
+// Función para buscar datos según el coach seleccionado
+// Función para buscar datos según el coach seleccionado
+async function populateFields() {
+    const coachSelect = document.getElementById('coach');
+    const selectedCoach = coachSelect ? coachSelect.value : null;
+
+    if (!selectedCoach) {
+        clearFields();
+        return;
+    }
+
+    try {
+        const filterFormula = `{Coach Solicitante}="${selectedCoach}"`;
+        const response = await fetch(`${apiUrlBase}/${encodeURIComponent(groupName)}?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+            headers: { Authorization: apiKey }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (!data.records || data.records.length === 0) {
+            alert('No se encontraron datos para el coach seleccionado.');
+            clearFields();
+            return;
+        }
+
+        const record = data.records[0].fields;
+
+        // Asignar los valores recuperados a los campos
+        document.getElementById('country').value = record['País'] || '';
+        document.getElementById('portal').value = record['Portal'] || '';
+        document.getElementById('password').value = record['Contraseña'] || '';
+        document.getElementById('zoom').value = record['Zoom'] || '';
+        document.getElementById('zoomPassword').value = record['Contraseña Zoom'] || '';
+
+        const emergencyRoomLink = document.getElementById('emergencyRoomLink');
+        if (record['Sala de Emergencia']) {
+            emergencyRoomLink.href = record['Sala de Emergencia'];
+            emergencyRoomLink.style.display = 'inline';
+        } else {
+            emergencyRoomLink.href = '#';
+            emergencyRoomLink.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error al cargar los datos del coach:', error);
+        alert('Error al cargar los datos del coach seleccionado. Inténtalo más tarde.');
+        clearFields();
+    }
+}
+const tableNames = JSON.parse(sessionStorage.getItem('tableNames')) || [];
+console.log('Tablas disponibles:', tableNames);
+
+// Función para buscar datos según el nombre seleccionado en una tabla dinámica
+async function populateFieldsByName() {
+    const nameSelect = document.getElementById('nameSelect');
+    const selectedName = nameSelect ? nameSelect.value.trim() : null;
+
+    if (!selectedName) {
+        alert('Por favor, selecciona un nombre.');
+        clearFieldsByName();
+        return;
+    }
+
+    const tablesToSearch = JSON.parse(sessionStorage.getItem('tableNames')) || [];
+    if (tablesToSearch.length === 0) {
+        console.error('No hay tablas disponibles para buscar.');
+        alert('No se encontraron tablas para buscar.');
+        return;
+    }
+
+    let foundRecord = null;
+
+    try {
+        for (const table of tablesToSearch) {
+            const filterFormula = `{Coach Solicitante}="${selectedName}"`;
+            const response = await fetch(`${apiUrlBase}/${encodeURIComponent(table)}?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+                headers: { Authorization: apiKey },
+            });
+
+            if (!response.ok) {
+                console.warn(`Error al consultar la tabla ${table}: ${response.status}`);
+                continue;
+            }
+
+            const data = await response.json();
+            if (data.records && data.records.length > 0) {
+                foundRecord = data.records[0].fields;
+                break;
+            }
+        }
+
+        if (!foundRecord) {
+            alert('No se encontraron datos para el nombre seleccionado en ninguna tabla.');
+            clearFieldsByName();
+            return;
+        }
+
+        // Asignar los valores encontrados
+        document.getElementById('country').value = foundRecord['País'] || '';
+        document.getElementById('portal').value = foundRecord['Portal'] || '';
+        document.getElementById('password').value = foundRecord['Contraseña'] || '';
+        document.getElementById('zoom').value = foundRecord['Zoom'] || '';
+        document.getElementById('zoomPassword').value = foundRecord['Contraseña Zoom'] || '';
+
+        const emergencyRoomLink = document.getElementById('emergencyRoomLink');
+        if (foundRecord['Sala de Emergencia']) {
+            emergencyRoomLink.href = foundRecord['Sala de Emergencia'];
+            emergencyRoomLink.style.display = 'inline';
+        } else {
+            emergencyRoomLink.href = '#';
+            emergencyRoomLink.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error al cargar los datos del nombre:', error);
+        alert('Error al cargar los datos. Inténtalo más tarde.');
+        clearFieldsByName();
+    }
+}
+
+
+function clearFieldsByName() {
+    document.getElementById('country').value = '';
+    document.getElementById('portal').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('zoom').value = '';
+    document.getElementById('zoomPassword').value = '';
+    const emergencyRoomLink = document.getElementById('emergencyRoomLink');
+    if (emergencyRoomLink) {
+        emergencyRoomLink.href = '#';
+        emergencyRoomLink.style.display = 'none';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const nameSelect = document.getElementById('nameSelect');
+    if (nameSelect) {
+        nameSelect.addEventListener('change', populateFieldsByName);
+    } else {
+        console.error('El campo "Seleccione un nombre" no existe en el DOM.');
+    }
+});
+
 async function fetchDataByName(name) {
     try {
         const tableBody = document.getElementById('hoursTableBody');
@@ -359,10 +501,18 @@ async function fetchDataByName(name) {
         }
 
         const data = await response.json();
+        const currentDate = new Date(); // Fecha actual
 
         data.records.forEach(record => {
-            const row = document.createElement('tr');
             const fields = record.fields;
+
+            // Validar la fecha antes de procesar el registro
+            const recordDate = new Date(fields["Fecha"]);
+            if (!fields["Fecha"] || recordDate < currentDate) {
+                return; // Omitir registros con fechas caducadas o sin fecha
+            }
+
+            const row = document.createElement('tr');
 
             // Asignar el ID del registro como atributo data-id
             row.setAttribute('data-id', record.id);
@@ -467,11 +617,19 @@ async function fetchDataByName(name) {
 }
 
 
-
-
 // Cargar nombres únicos al inicializar la página
 document.addEventListener('DOMContentLoaded', loadUniqueNames);
 
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('nameSelect').addEventListener('change', (event) => {
+        const selectedName = event.target.value; // Obtiene el valor seleccionado
+        if (selectedName) {
+            fetchDataFromAllTables(selectedName); // Llama a la función para buscar en las tablas
+        } else {
+            clearFields(); // Limpia los campos si no hay selección
+        }
+    });
+});
 
 
 
@@ -546,46 +704,54 @@ document.addEventListener('DOMContentLoaded', loadUniqueNames);
     
         // Cargar coaches al cargar la página
         document.addEventListener('DOMContentLoaded', loadCoaches);
-        async function populateFields() {
-    const coachSelect = document.getElementById('coach');
-    const selectedCoach = coachSelect.value;
 
-    if (!selectedCoach) {
+async function populateFieldsFromAllTables(event) {
+    const selectedField = event.target; // Detectar cuál campo disparó el evento
+    const selectedValue = selectedField.value;
+
+    if (!selectedValue) {
         clearFields();
         return;
     }
 
     try {
-        const filterFormula = `{Coach Solicitante}="${selectedCoach}"`;
-        const response = await fetch(`${apiUrlBase}/${encodeURIComponent(groupName)}?filterByFormula=${encodeURIComponent(filterFormula)}`, {
-            headers: { Authorization: apiKey }
-        });
+        const tables = ["Reemplazos", "TablasCoach", "OtraTabla1", "OtraTabla2"]; // Cambiar por tus tablas reales
+        let foundRecord = null;
 
-        if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
+        for (const table of tables) {
+            const filterFormula = `{Coach Solicitante}="${selectedValue}"`;
+            const response = await fetch(`${apiUrlBase}/${encodeURIComponent(table)}?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+                headers: { Authorization: apiKey }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error HTTP en la tabla ${table}: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.records && data.records.length > 0) {
+                foundRecord = data.records[0].fields; // Obtener el primer registro encontrado
+                break;
+            }
         }
 
-        const data = await response.json();
-
-        if (!data.records || data.records.length === 0) {
-            alert('No se encontraron datos para el coach seleccionado.');
+        if (!foundRecord) {
+            alert('No se encontraron datos para el nombre seleccionado en ninguna tabla.');
             clearFields();
             return;
         }
 
-        const record = data.records[0].fields;
-
         // Asignar los valores recuperados a los campos existentes
-        document.getElementById('country').value = record['País'] || ''; // Campo País actualizado
-        document.getElementById('portal').value = record['Portal'] || '';
-        document.getElementById('password').value = record['Contraseña'] || '';
-        document.getElementById('zoom').value = record['Zoom'] || '';
-        document.getElementById('zoomPassword').value = record['Contraseña Zoom'] || ''; // Campo Contraseña Zoom actualizado
+        document.getElementById('country').value = foundRecord['País'] || ''; // Campo País
+        document.getElementById('portal').value = foundRecord['Portal'] || '';
+        document.getElementById('password').value = foundRecord['Contraseña'] || '';
+        document.getElementById('zoom').value = foundRecord['Zoom'] || '';
+        document.getElementById('zoomPassword').value = foundRecord['Contraseña Zoom'] || ''; // Campo Contraseña Zoom
 
-        // Configurar el enlace para la Sala de Emergencia
         const emergencyRoomLink = document.getElementById('emergencyRoomLink');
-        if (record['Sala de Emergencia']) {
-            emergencyRoomLink.href = record['Sala de Emergencia'];
+        if (foundRecord['Sala de Emergencia']) {
+            emergencyRoomLink.href = foundRecord['Sala de Emergencia'];
             emergencyRoomLink.style.display = 'inline';
             document.getElementById('emergencyRoom').style.display = 'none';
         } else {
@@ -593,12 +759,14 @@ document.addEventListener('DOMContentLoaded', loadUniqueNames);
             emergencyRoomLink.style.display = 'none';
             document.getElementById('emergencyRoom').style.display = 'inline';
         }
+
     } catch (error) {
-        console.error('Error al cargar los datos del coach:', error);
-        alert('Error al cargar los datos del coach seleccionado. Inténtalo más tarde.');
+        console.error('Error al cargar los datos del nombre:', error);
+        alert('Error al cargar los datos. Inténtalo más tarde.');
         clearFields();
     }
 }
+
 
 function clearFields() {
     document.getElementById('country').value = ''; // Limpia el campo de País
@@ -939,7 +1107,6 @@ async function saveDataToAirtable() {
 // Vincular la función al botón Guardar
 document.getElementById('saveData').addEventListener('click', saveDataToAirtable);
 
-
 async function fetchDataByName(name) {
     try {
         const tableBody = document.getElementById('hoursTableBody');
@@ -1057,6 +1224,7 @@ document.getElementById('nameSelect').addEventListener('change', (event) => {
         document.getElementById('hoursTableBody').innerHTML = ''; // Limpiar la tabla si no se selecciona un nombre
     }
 });
+
 async function replaceData() {
     const tableBody = document.getElementById('hoursTableBody');
     const rows = Array.from(tableBody.querySelectorAll('tr'));
@@ -1218,7 +1386,83 @@ async function updateRowData(row, recordId) {
         alert('Hubo un error al actualizar el registro.');
     }
 }
+async function fetchDataFromAllTables(name) {
+    try {
+        const tables = ["Reemplazos", "TablasCoach"]; // Asegúrate de que estas tablas existen
+        let foundRecord = null;
 
+        // Busca en todas las tablas
+        for (const table of tables) {
+            const filterFormula = `{Coach Solicitante}="${name}"`; // Formato correcto del filtro
+            const response = await fetch(`${apiUrlBase}/${table}?filterByFormula=${encodeURIComponent(filterFormula)}`, {
+                headers: { Authorization: apiKey },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error HTTP en la tabla ${table}: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.records && data.records.length > 0) {
+                foundRecord = data.records[0].fields; // Obtiene el primer registro encontrado
+                break; // Detén la búsqueda si encuentra datos
+            }
+        }
+
+        if (!foundRecord) {
+            alert('No se encontraron datos para el nombre seleccionado.');
+            clearFields(); // Limpia los campos si no hay datos
+            return;
+        }
+
+        // Rellena los campos con los datos encontrados
+        document.getElementById('country').value = foundRecord['País'] || '';
+        document.getElementById('portal').value = foundRecord['Portal'] || '';
+        document.getElementById('password').value = foundRecord['Contraseña'] || '';
+        document.getElementById('zoom').value = foundRecord['Zoom'] || '';
+        document.getElementById('zoomPassword').value = foundRecord['Contraseña Zoom'] || '';
+
+        const emergencyRoomLink = document.getElementById('emergencyRoomLink');
+        if (foundRecord['Sala de Emergencia']) {
+            emergencyRoomLink.href = foundRecord['Sala de Emergencia'];
+            emergencyRoomLink.style.display = 'inline';
+            document.getElementById('emergencyRoom').style.display = 'none';
+        } else {
+            emergencyRoomLink.href = '#';
+            emergencyRoomLink.style.display = 'none';
+            document.getElementById('emergencyRoom').style.display = 'inline';
+        }
+    } catch (error) {
+        console.error('Error al buscar datos:', error);
+        clearFields(); // Limpia los campos si hay un error
+    }
+}
+
+
+// Limpiar los campos si no hay datos
+function clearFields() {
+    document.getElementById('country').value = '';
+    document.getElementById('portal').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('zoom').value = '';
+    document.getElementById('zoomPassword').value = '';
+    document.getElementById('emergencyRoomLink').href = '#';
+    document.getElementById('emergencyRoomLink').style.display = 'none';
+    document.getElementById('emergencyRoom').style.display = 'inline';
+}
+    </script>
+    <script>
+        // Función para redirigir al index
+        function redirectToIndex() {
+            window.location.href = "index.html"; // Cambia a la ruta correcta de tu archivo index.html
+        }
+    
+        // Función para redirigir a Airtable
+        function redirectToAirtable() {
+            const airtableBaseUrl = "https://airtable.com/appVuMTXFU8YHrGND/tblJEyWuPncw94rX7/viwepoLsXNNI6Dh6t?blocks=hide"; // Reemplaza con la URL de tu base en Airtable
+            window.open(airtableBaseUrl, "_blank"); // Abre Airtable en una nueva pestaña
+        }
     </script>
     
 </body>

@@ -219,48 +219,55 @@
     <script>
         const apiUrl = 'https://api.airtable.com/v0/appVuMTXFU8YHrGND/Grupos';
         const apiKey = 'Bearer pat9wBOS3cEULZjbM.46a19c678b7b3a403febb212e0ec73de16f408d4193bf476a5d7348c23be39b1';
-
+    
         async function loadGroups() {
             try {
                 const response = await fetch(apiUrl, {
                     headers: { Authorization: apiKey }
                 });
-
+    
                 if (!response.ok) {
                     throw new Error(`Error HTTP: ${response.status}`);
                 }
-
+    
                 const { records } = await response.json();
                 const groupSelect = document.getElementById('group');
-
+                const tableNames = []; // Lista para almacenar los nombres de las tablas
+    
                 if (records.length === 0) {
                     alert('No hay grupos disponibles en este momento.');
                     return;
                 }
-
+    
                 records.forEach(record => {
                     const groupName = record.fields['Nombre de grupos'];
                     const groupPassword = record.fields['Contraseña de grupos'];
-
+    
                     if (!groupName || !groupPassword) {
                         console.warn(`Registro incompleto: ${JSON.stringify(record.fields)}`);
                         return;
                     }
-
+    
                     const option = document.createElement('option');
                     option.value = groupName;
                     option.dataset.password = groupPassword;
                     option.textContent = groupName;
                     groupSelect.appendChild(option);
+    
+                    // Agregar nombre de grupo a la lista de tablas
+                    tableNames.push(groupName);
                 });
+    
+                // Guardar nombres de tablas en sessionStorage
+                sessionStorage.setItem('tableNames', JSON.stringify(tableNames));
             } catch (error) {
                 console.error('Error al cargar los grupos desde Airtable:', error);
-                alert('No se pudieron cargar los grupos. Inténtalo más tarde.');
+                alert(`Error al cargar los grupos: ${error.message}. Intenta nuevamente más tarde.`);
             }
         }
-
+    
         document.addEventListener('DOMContentLoaded', loadGroups);
-
+    
         function togglePassword() {
             const passwordField = document.getElementById('password');
             const toggleIcon = document.querySelector('.toggle-password');
@@ -272,48 +279,49 @@
                 toggleIcon.textContent = '👁️';
             }
         }
+    
         function redirectToPage() {
-    const groupSelect = document.getElementById('group');
-    const selectedOption = groupSelect.options[groupSelect.selectedIndex];
-    const groupPassword = selectedOption.dataset.password;
-    const enteredPassword = document.getElementById('password').value;
-
-    if (selectedOption.value === "default") {
-        alert("Por favor, selecciona un grupo.");
-        return;
-    }
-
-    if (!groupPassword) {
-        alert("Este grupo no tiene una contraseña asignada. Contacta al administrador.");
-        return;
-    }
-
-    if (enteredPassword === groupPassword) {
-        sessionStorage.setItem('groupName', selectedOption.value);
-        alert('Acceso permitido. Redirigiendo...');
-        window.location.href = 'Reemplazos.html';
-    } else {
-        alert('Contraseña incorrecta. Por favor, intenta nuevamente.');
-    }
-}
-
-
+            const groupSelect = document.getElementById('group');
+            const selectedOption = groupSelect.options[groupSelect.selectedIndex];
+            const groupPassword = selectedOption.dataset.password;
+            const enteredPassword = document.getElementById('password').value;
+    
+            if (selectedOption.value === "default") {
+                alert("Por favor, selecciona un grupo.");
+                return;
+            }
+    
+            if (!groupPassword) {
+                alert("Este grupo no tiene una contraseña asignada. Contacta al administrador.");
+                return;
+            }
+    
+            if (enteredPassword === groupPassword) {
+                // Guardar el grupo seleccionado en sessionStorage
+                sessionStorage.setItem('groupName', selectedOption.value);
+                alert('Acceso permitido. Redirigiendo...');
+                window.location.href = 'Reemplazos.html';
+            } else {
+                alert('Contraseña incorrecta. Por favor, intenta nuevamente.');
+            }
+        }
+    
         function accessGroup() {
             const groupSelect = document.getElementById('group');
             const selectedOption = groupSelect.options[groupSelect.selectedIndex];
             const groupPassword = selectedOption.dataset.password;
             const enteredPassword = document.getElementById('password').value;
-
-           if (selectedOption.value === "default") {
-              alert("Por favor, selecciona un grupo.");
+    
+            if (selectedOption.value === "default") {
+                alert("Por favor, selecciona un grupo.");
                 return;
             }
-
+    
             if (!groupPassword) {
                 alert("Este grupo no tiene una contraseña asignada. Contacta al administrador.");
                 return;
             }
-
+    
             if (enteredPassword === groupPassword) {
                 sessionStorage.setItem('groupName', selectedOption.value);
                 alert('Acceso permitido. Redirigiendo...');
@@ -322,7 +330,7 @@
                 alert('Contraseña incorrecta. Por favor, intenta nuevamente.');
             }
         }
-        
     </script>
+    
 </body>
 </html>
